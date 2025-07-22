@@ -152,7 +152,7 @@ Built with modern Python practices:
 ### CI/CD Pipeline
 This project uses GitHub Actions for continuous integration and deployment:
 
-- **Automated Testing**: Runs on Python 3.9, 3.10, 3.11, and 3.12
+- **Automated Testing**: Runs on Python 3.9 and 3.11
 - **Code Quality**: Black formatting, isort imports, flake8 linting, mypy type checking
 - **Security Analysis**: Bandit security scanning and dependency vulnerability checks
 - **Coverage Reporting**: Codecov integration for test coverage tracking

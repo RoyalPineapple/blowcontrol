@@ -26,9 +26,7 @@ This guide explains how to set up branch protection rules for the `master` branc
 - Check **Require status checks to pass before merging**
 - Add the following status checks:
   - `Tests and Code Quality / test (3.9)`
-  - `Tests and Code Quality / test (3.10)`
   - `Tests and Code Quality / test (3.11)`
-  - `Tests and Code Quality / test (3.12)`
   - `Tests and Code Quality / lint`
   - `Tests and Code Quality / security`
 
@@ -71,7 +69,7 @@ The following checks must pass before merging:
 
 | Check | Description | Python Versions |
 |-------|-------------|-----------------|
-| `test` | Unit and integration tests | 3.9, 3.10, 3.11, 3.12 |
+| `test` | Unit and integration tests | 3.9, 3.11 |
 | `lint` | Code formatting and style | 3.11 |
 | `security` | Security analysis | 3.11 |
 
