@@ -29,7 +29,7 @@ class TestConfig:
 
     def test_mqtt_port_default(self):
         """Test that MQTT_PORT defaults to 1883."""
-        with patch.dict(os.environ, {}, clear=True):
+        with patch.dict(os.environ, {'TESTING': '1'}, clear=True):
             import importlib
             import dyson2mqtt.config
             importlib.reload(dyson2mqtt.config)

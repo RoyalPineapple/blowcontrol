@@ -127,7 +127,7 @@ class TestCLI:
                         with pytest.raises(SystemExit):
                             main()
 
-    @patch('dyson2mqtt.commands.power.set_power')
+    @patch('dyson2mqtt.cli.set_power')
     def test_cli_json_output(self, mock_set_power):
         """Test CLI JSON output format."""
         mock_set_power.return_value = True
@@ -139,7 +139,7 @@ class TestCLI:
                 assert '"success": true' in output
                 assert '"message"' in output
 
-    @patch('dyson2mqtt.commands.power.set_power')
+    @patch('dyson2mqtt.cli.set_power')
     def test_cli_error_json_output(self, mock_set_power):
         """Test CLI JSON output format for errors."""
         mock_set_power.return_value = False
@@ -148,7 +148,7 @@ class TestCLI:
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
                 output = mock_stdout.getvalue()
-                assert '"success": true' in output  # The CLI shows success even when command fails
+                assert '"success": false' in output  # The CLI shows failure when command fails
                 assert '"message"' in output
 
     def test_cli_debug_flag(self):

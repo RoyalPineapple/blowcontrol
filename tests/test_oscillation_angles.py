@@ -4,6 +4,7 @@ Tests for oscillation angle calculations and conversions.
 """
 
 import unittest
+from unittest.mock import patch
 from dyson2mqtt.commands.oscillation import (
     set_oscillation_angles,
     get_oscillation_info,
@@ -16,6 +17,12 @@ from dyson2mqtt.commands.oscillation import (
 
 class TestOscillationAngles(unittest.TestCase):
     """Test oscillation angle calculations and conversions."""
+
+    @patch('dyson2mqtt.mqtt.client.DysonMQTTClient')
+    def setUp(self, mock_client_class):
+        """Set up test fixtures."""
+        self.mock_client = mock_client_class.return_value
+        self.mock_client.send_standalone_command.return_value = True
 
     def test_width_heading_to_angles(self):
         """Test converting width + heading to lower/upper angles."""
