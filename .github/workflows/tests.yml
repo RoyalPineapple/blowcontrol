@@ -39,6 +39,12 @@ jobs:
         pip install -r requirements-test.txt
 
     - name: Run tests with coverage
+      env:
+        TESTING: "1"
+        MQTT_PASSWORD: "test-password"
+        SERIAL_NUMBER: "test-serial"
+        DEVICE_IP: "192.168.1.100"
+        ROOT_TOPIC: "test-topic"
       run: |
         python -m pytest tests/ --cov=dyson2mqtt --cov-report=xml --cov-report=term-missing
 
@@ -65,6 +71,12 @@ jobs:
         pip install flake8 black isort mypy
 
     - name: Run linting checks
+      env:
+        TESTING: "1"
+        MQTT_PASSWORD: "test-password"
+        SERIAL_NUMBER: "test-serial"
+        DEVICE_IP: "192.168.1.100"
+        ROOT_TOPIC: "test-topic"
       run: |
         # Check code formatting with black
         black --check --diff dyson2mqtt/ tests/
@@ -76,6 +88,12 @@ jobs:
         flake8 dyson2mqtt/ tests/ --max-line-length=88 --extend-ignore=E203,W503
 
     - name: Run type checking with mypy
+      env:
+        TESTING: "1"
+        MQTT_PASSWORD: "test-password"
+        SERIAL_NUMBER: "test-serial"
+        DEVICE_IP: "192.168.1.100"
+        ROOT_TOPIC: "test-topic"
       run: |
         mypy dyson2mqtt/ --ignore-missing-imports --no-strict-optional
 
@@ -96,6 +114,12 @@ jobs:
         pip install bandit safety
 
     - name: Run security checks
+      env:
+        TESTING: "1"
+        MQTT_PASSWORD: "test-password"
+        SERIAL_NUMBER: "test-serial"
+        DEVICE_IP: "192.168.1.100"
+        ROOT_TOPIC: "test-topic"
       run: |
         # Check for common security issues
         bandit -r dyson2mqtt/ -f json -o bandit-report.json || true
