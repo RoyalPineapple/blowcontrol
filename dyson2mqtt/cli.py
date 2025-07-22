@@ -136,22 +136,40 @@ def main():
     try:
         if args.command == "power":
             try:
+                # Validate input first
+                from dyson2mqtt.utils import parse_boolean
+                parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_power(args.state)
                 output_result(success, f"Power set to {args.state.upper()}", json_mode=args.json)
+            except ValueError as e:
+                output_result(False, f"Invalid power state: {e}", json_mode=args.json)
+                sys.exit(1)
             except Exception as e:
                 output_result(False, f"Failed to set power: {e}", json_mode=args.json)
                 sys.exit(1)
         elif args.command == "auto":
             try:
+                # Validate input first
+                from dyson2mqtt.utils import parse_boolean
+                parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_auto_mode(args.state)
                 output_result(success, f"Auto mode set to {args.state.upper()}", json_mode=args.json)
+            except ValueError as e:
+                output_result(False, f"Invalid auto mode state: {e}", json_mode=args.json)
+                sys.exit(1)
             except Exception as e:
                 output_result(False, f"Failed to set auto mode: {e}", json_mode=args.json)
                 sys.exit(1)
         elif args.command == "night":
             try:
+                # Validate input first
+                from dyson2mqtt.utils import parse_boolean
+                parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_night_mode(args.state)
                 output_result(success, f"Night mode set to {args.state.upper()}", json_mode=args.json)
+            except ValueError as e:
+                output_result(False, f"Invalid night mode state: {e}", json_mode=args.json)
+                sys.exit(1)
             except Exception as e:
                 output_result(False, f"Failed to set night mode: {e}", json_mode=args.json)
                 sys.exit(1)
@@ -160,6 +178,9 @@ def main():
                 validated_speed = validate_fan_speed_input(args.speed)
                 success = set_fan_speed(validated_speed)
                 output_result(success, f"Fan speed set to {validated_speed}", json_mode=args.json)
+            except ValueError as e:
+                output_result(False, f"Invalid fan speed: {e}", json_mode=args.json)
+                sys.exit(1)
             except Exception as e:
                 output_result(False, f"Failed to set fan speed: {e}", json_mode=args.json)
                 sys.exit(1)
@@ -167,6 +188,9 @@ def main():
             try:
                 success = set_sleep_timer(args.minutes)
                 output_result(success, f"Sleep timer set to {args.minutes}", json_mode=args.json)
+            except ValueError as e:
+                output_result(False, f"Invalid timer value: {e}", json_mode=args.json)
+                sys.exit(1)
             except Exception as e:
                 output_result(False, f"Failed to set sleep timer: {e}", json_mode=args.json)
                 sys.exit(1)
@@ -230,9 +254,10 @@ def main():
                 if args.json:
                     print(json.dumps(state, indent=2))
                 else:
-                    if state:
-                        printer = DeviceStatePrinter()
-                        printer.print_state(state)
+                    if state and 'state' in state:
+                        DeviceStatePrinter.print_current_state(state['state'])
+                        if 'environmental' in state:
+                            DeviceStatePrinter.print_environmental(state['environmental'])
                     else:
                         print("No state received from device.")
             except Exception as e:
