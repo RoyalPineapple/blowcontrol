@@ -1,3 +1,0 @@
-[submodule "opendyson"]
-	path = opendyson
-	url = git@github.com:libdyson-wg/opendyson.git

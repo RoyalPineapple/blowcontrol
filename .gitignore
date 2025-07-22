@@ -145,3 +145,14 @@ legacy/
 # Development and experimental files
 bin/
 experimentation/
+
+# Test coverage and cache files
+.coverage
+htmlcov/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
