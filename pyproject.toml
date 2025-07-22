@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dyson2mqtt"
+version = "1.0.0"
+description = "Professional Dyson Fan Controller with MQTT Integration"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Alex Odawa", email = "alex@squareup.com"}
+]
+maintainers = [
+    {name = "Alex Odawa", email = "alex@squareup.com"}
+]
+keywords = ["dyson", "mqtt", "fan", "controller", "home-automation", "iot"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Home Automation",
+    "Topic :: System :: Hardware",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "paho-mqtt>=1.6.1",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+dyson2mqtt = "dyson2mqtt.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/RoyalPineapple/dyson2mqtt"
+Repository = "https://github.com/RoyalPineapple/dyson2mqtt"
+Documentation = "https://github.com/RoyalPineapple/dyson2mqtt#readme"
+"Bug Tracker" = "https://github.com/RoyalPineapple/dyson2mqtt/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dyson2mqtt*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=dyson2mqtt --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["dyson2mqtt"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+] 
