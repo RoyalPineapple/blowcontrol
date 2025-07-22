@@ -1,5 +1,7 @@
 # Dyson2MQTT
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A professional, modular Python application for controlling Dyson fans via MQTT with support for real-time monitoring, async operations, and machine-readable JSON output.
 
 ## 🚀 Quick Start
@@ -50,7 +52,7 @@ A professional, modular Python application for controlling Dyson fans via MQTT w
 
 ```
 dyson2mqtt/
-├── app/                    # Main application
+├── dyson2mqtt/            # Main application
 │   ├── commands/          # Individual command implementations  
 │   ├── mqtt/              # MQTT client and async operations
 │   ├── state/             # Device state management
@@ -145,7 +147,16 @@ Built with modern Python practices:
 
 ## 📄 License
 
-MIT License - see individual components for specific licensing terms.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Third-Party Licenses
+
+- **paho-mqtt**: Eclipse Public License v1.0 / Eclipse Distribution License v1.0
+- **python-dotenv**: BSD-3-Clause License
+- **pytest**: MIT License
+- **pytest-cov**: MIT License
+- **pytest-mock**: MIT License
+- **pytest-asyncio**: Apache License 2.0
 
 ---
 

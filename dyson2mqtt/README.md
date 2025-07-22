@@ -199,4 +199,5 @@ The app is designed with a modular architecture:
 ---
 
 ## License
-MIT
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.

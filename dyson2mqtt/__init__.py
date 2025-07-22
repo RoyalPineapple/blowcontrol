@@ -13,7 +13,9 @@ Example:
 """
 
 __version__ = "1.0.0"
-__author__ = "Dyson2MQTT Contributors"
+__author__ = "Alex Odawa"
+__license__ = "MIT"
+__url__ = "https://github.com/yourusername/dyson2mqtt"
 
 # Main CLI entry point
 from .cli import main

@@ -1,0 +1,10 @@
+# Dyson2MQTT Dependencies
+# Core dependencies for the Dyson2MQTT command-line controller
+
+# MQTT client for device communication
+paho-mqtt>=1.6.1
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# Development and testing dependencies are in requirements-test.txt 
