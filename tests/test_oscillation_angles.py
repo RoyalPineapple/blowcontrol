@@ -18,11 +18,17 @@ from dyson2mqtt.commands.oscillation import (
 class TestOscillationAngles(unittest.TestCase):
     """Test oscillation angle calculations and conversions."""
 
-    @patch('dyson2mqtt.mqtt.client.DysonMQTTClient')
-    def setUp(self, mock_client_class):
+    def setUp(self):
         """Set up test fixtures."""
-        self.mock_client = mock_client_class.return_value
+        # Create a mock client that will be used by all oscillation functions
+        self.mock_client_patcher = patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
+        self.mock_client_class = self.mock_client_patcher.start()
+        self.mock_client = self.mock_client_class.return_value
         self.mock_client.send_standalone_command.return_value = True
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        self.mock_client_patcher.stop()
 
     def test_width_heading_to_angles(self):
         """Test converting width + heading to lower/upper angles."""
