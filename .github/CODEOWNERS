@@ -1,0 +1,24 @@
+# Global owners - these users will be the default owners for everything in
+# the repo. They will be requested for review when someone opens a pull request.
+* @RoyalPineapple
+
+# Core application code
+/dyson2mqtt/ @RoyalPineapple
+
+# Tests
+/tests/ @RoyalPineapple
+
+# Configuration and CI/CD
+/.github/ @RoyalPineapple
+/pyproject.toml @RoyalPineapple
+/.pre-commit-config.yaml @RoyalPineapple
+/.codecov.yml @RoyalPineapple
+
+# Documentation
+/README.md @RoyalPineapple
+/CONTRIBUTING.md @RoyalPineapple
+/CHANGELOG.md @RoyalPineapple
+/LICENSE @RoyalPineapple
+
+# Dependencies
+/requirements*.txt @RoyalPineapple 

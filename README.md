@@ -1,6 +1,8 @@
 # Dyson2MQTT
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/RoyalPineapple/dyson2mqtt/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/dyson2mqtt/actions)
+[![Codecov](https://codecov.io/gh/RoyalPineapple/dyson2mqtt/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/dyson2mqtt)
 
 A modular Python application for controlling Dyson fans via MQTT with support for real-time monitoring, async operations, and machine-readable JSON output.
 
@@ -145,6 +147,45 @@ Built with modern Python practices:
 - **Comprehensive error handling** with structured responses
 - **Professional CLI** with argparse and proper exit codes
 
+## 🛠️ Development
+
+### CI/CD Pipeline
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **Automated Testing**: Runs on Python 3.9, 3.10, 3.11, and 3.12
+- **Code Quality**: Black formatting, isort imports, flake8 linting, mypy type checking
+- **Security Analysis**: Bandit security scanning and dependency vulnerability checks
+- **Coverage Reporting**: Codecov integration for test coverage tracking
+
+### Local Development Setup
+```bash
+# Clone and setup
+git clone https://github.com/RoyalPineapple/dyson2mqtt.git
+cd dyson2mqtt
+
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run tests
+pytest tests/
+
+# Run code quality checks
+black dyson2mqtt/ tests/
+isort dyson2mqtt/ tests/
+flake8 dyson2mqtt/ tests/
+mypy dyson2mqtt/
+```
+
+### Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- Code style and standards
+- Testing requirements
+- Pull request process
+- Development workflow
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -162,8 +203,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Ready to control your Dyson device like a pro!** 🌪️
 
-## Documentation
+## 📚 Documentation
 
 - **[App Documentation](./app/README.md)** - Detailed usage, architecture, and examples
 - **[Message Analysis](./experimentation/dyson_message_analysis.md)** - Complete MQTT message reference  
-- **[Development Roadmap](./app/GAMEPLAN.md)** - Project roadmap and checklist 
+- **[Development Roadmap](./app/GAMEPLAN.md)** - Project roadmap and checklist
+- **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines and setup
+- **[Changelog](CHANGELOG.md)** - Version history and changes 
