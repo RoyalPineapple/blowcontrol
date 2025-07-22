@@ -10,17 +10,22 @@ from dyson2mqtt.commands.auto_mode import set_auto_mode
 from dyson2mqtt.commands.fan_speed import set_fan_speed
 from dyson2mqtt.commands.sleep_timer import set_sleep_timer
 from dyson2mqtt.commands.oscillation import (
-    set_oscillation_angles, stop_oscillation, 
-    get_oscillation_info, set_oscillation_width, set_oscillation_direction,
-    WIDTH_DISPLAY_NAMES, parse_width_input, VALID_WIDTHS
+    stop_oscillation,
+    get_oscillation_info,
+    set_oscillation_width,
+    set_oscillation_direction,
+    WIDTH_DISPLAY_NAMES,
+    parse_width_input,
+    VALID_WIDTHS,
 )
 from dyson2mqtt.state.device_state import DeviceStatePrinter
-from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
 from dyson2mqtt.mqtt.client import DysonMQTTClient
 from dyson2mqtt.utils import parse_boolean
 import json
 
-def output_result(success: bool, message: str = "", data: dict = None, json_mode: bool = False):
+def output_result(
+    success: bool, message: str = "", data: dict = None, json_mode: bool = False
+):
     """Helper function for consistent output formatting."""
     if json_mode:
         result = {
@@ -36,6 +41,7 @@ def output_result(success: bool, message: str = "", data: dict = None, json_mode
         else:
             print(f"✗ {message}")
 
+
 def parse_int_input(value) -> int:
     """
     Parse integer input from string or int.
@@ -48,6 +54,7 @@ def parse_int_input(value) -> int:
     else:
         raise ValueError(f"Cannot convert {value} to integer")
 
+
 def validate_oscillation_heading(heading_input) -> int:
     """
     Validate oscillation heading input.
@@ -59,6 +66,7 @@ def validate_oscillation_heading(heading_input) -> int:
         raise ValueError("Heading must be between 0° and 359°")
     return heading
 
+
 def validate_fan_speed_input(speed_input) -> int:
     """
     Validate fan speed input.
@@ -69,6 +77,7 @@ def validate_fan_speed_input(speed_input) -> int:
     if not (0 <= speed <= 10):
         raise ValueError("Fan speed must be between 0 and 10")
     return speed
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -223,7 +232,6 @@ EXIT CODES:
         if args.command == "power":
             try:
                 # Validate input first
-                from dyson2mqtt.utils import parse_boolean
                 parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_power(args.state)
                 output_result(success, f"Power set to {args.state.upper()}", json_mode=args.json)
@@ -236,7 +244,6 @@ EXIT CODES:
         elif args.command == "auto":
             try:
                 # Validate input first
-                from dyson2mqtt.utils import parse_boolean
                 parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_auto_mode(args.state)
                 output_result(success, f"Auto mode set to {args.state.upper()}", json_mode=args.json)
@@ -249,7 +256,6 @@ EXIT CODES:
         elif args.command == "night":
             try:
                 # Validate input first
-                from dyson2mqtt.utils import parse_boolean
                 parse_boolean(args.state)  # This will raise ValueError if invalid
                 success = set_night_mode(args.state)
                 output_result(success, f"Night mode set to {args.state.upper()}", json_mode=args.json)
