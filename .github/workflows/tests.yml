@@ -11,10 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9, 3.10, 3.11, 3.12]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Debug Python version
+      run: echo "Setting up Python ${{ matrix.python-version }}"
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
