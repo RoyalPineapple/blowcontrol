@@ -166,17 +166,26 @@ cd dyson2mqtt
 # Install development dependencies
 pip install -e ".[dev]"
 
-# Install pre-commit hooks
-pre-commit install
-
 # Run tests
 pytest tests/
 
+# Fix linting issues automatically
+python3 scripts/fix_linting.py
+
 # Run code quality checks
-black dyson2mqtt/ tests/
-isort dyson2mqtt/ tests/
 flake8 dyson2mqtt/ tests/
-mypy dyson2mqtt/
+```
+
+### Pre-commit Hooks
+The repository includes pre-commit hooks that automatically check for:
+- Trailing whitespace
+- Missing newlines at end of files
+- Debug statements
+- Merge conflict markers
+
+To manually fix formatting issues before committing:
+```bash
+python3 scripts/fix_linting.py
 ```
 
 ### Contributing
