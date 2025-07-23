@@ -218,7 +218,7 @@ class TestCLIOscillation:
                 assert "✓" in output
                 mock_set_direction.assert_called_once_with(90)
 
-    @patch("dyson2mqtt.cli.stop_oscillation")
+    @patch("dyson2mqtt.cli.stop_oscillation_dict")
     def test_cli_oscillation_stop(self, mock_stop):
         """Test CLI oscillation stop command."""
         mock_stop.return_value = {"success": True}
