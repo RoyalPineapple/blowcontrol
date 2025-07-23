@@ -3,7 +3,7 @@
 * @RoyalPineapple
 
 # Core application code
-/dyson2mqtt/ @RoyalPineapple
+/blowcontrol/ @RoyalPineapple
 
 # Tests
 /tests/ @RoyalPineapple

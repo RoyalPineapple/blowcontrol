@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -53,7 +54,7 @@ jobs:
         DEVICE_IP: "192.168.1.100"
         ROOT_TOPIC: "test-topic"
       run: |
-        python -m pytest tests/ --cov=dyson2mqtt --cov-report=xml --cov-report=term-missing
+        python -m pytest tests/ --cov=blowcontrol --cov-report=xml --cov-report=term-missing
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
@@ -86,13 +87,13 @@ jobs:
         ROOT_TOPIC: "test-topic"
       run: |
         # Check code formatting with black
-        black --check --diff dyson2mqtt/ tests/
+        black --check --diff blowcontrol/ tests/
 
         # Check import sorting with isort
-        isort --check-only --diff dyson2mqtt/ tests/
+        isort --check-only --diff blowcontrol/ tests/
 
         # Check code style with flake8
-        flake8 dyson2mqtt/ tests/ --max-line-length=88 --extend-ignore=E203,W503,E501
+        flake8 blowcontrol/ tests/ --max-line-length=88 --extend-ignore=E203,W503,E501
 
     - name: Run type checking with mypy
       env:
@@ -102,7 +103,7 @@ jobs:
         DEVICE_IP: "192.168.1.100"
         ROOT_TOPIC: "test-topic"
       run: |
-        mypy dyson2mqtt/ --ignore-missing-imports --no-strict-optional
+        mypy blowcontrol/ --ignore-missing-imports --no-strict-optional
 
   security:
     runs-on: ubuntu-latest
@@ -129,7 +130,7 @@ jobs:
         ROOT_TOPIC: "test-topic"
       run: |
         # Check for common security issues
-        bandit -r dyson2mqtt/ -f json -o bandit-report.json || true
+        bandit -r blowcontrol/ -f json -o bandit-report.json || true
 
         # Check for known vulnerabilities in dependencies
         safety check --json --output safety-report.json || true
