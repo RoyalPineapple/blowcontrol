@@ -1,5 +1,5 @@
 
-**BlowControl** is a command-line app for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
+**BlowControl** is a command-line tool for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it seems to work. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
 
 ---
 
@@ -7,10 +7,10 @@
 
 ✅ **Device Control**: Power, auto mode, night mode, fan speed, sleep timer
 ✅ **State Monitoring**: Real-time listening, on-demand state fetching
-✅ **Async Support**: Non-blocking operations with async/await
+✅ **Async Support**: Non-blocking operations with async/await...
 ✅ **JSON Output**: Machine-readable responses for automation
-✅ **Background Listeners**: Thread-safe state monitoring
-✅ **Clean CLI**: Professional command-line interface with helpful output
+✅ **Background Listeners**: Hopefully thread-safe state monitoring
+✅ **Clean Looking CLI**: Professional looking command-line interface with helpful output sells the quality
 
 ---
 
@@ -47,59 +47,19 @@ The app will automatically load these from `.env` if present.
 
 ---
 
-## Usage
+## Command Reference
 
-Run the CLI using:
-
-```
-python3 -m app <command> [arguments]
-```
-
-## 🔧 Basic Usage
-
-```bash
-# Power control
-python3 -m app power on|off
-
-# Fan settings
-python3 -m app speed 0-10
-python3 -m app auto on|off
-python3 -m app night on|off
-python3 -m app timer 2h15m|off
-
-# Oscillation
-python3 -m app width off|narrow|medium|wide|full
-python3 -m app direction 0-359
-
-# Monitoring
-python3 -m app listen
-python3 -m app state [--json]
-```
-
-**JSON Output Example:**
-```json
-{
-  "success": true,
-  "state": {
-    "msg": "CURRENT-STATE",
-    "time": "2025-07-22T17:44:55.000Z",
-    "product-state": {
-      "fpwr": "ON",
-      "fnsp": "0005",
-      "auto": "OFF",
-      "nmod": "OFF",
-      "oson": "OFF"
-    }
-  },
-  "environmental": {
-    "msg": "ENVIRONMENTAL-CURRENT-SENSOR-DATA",
-    "data": {
-      "pm25": "0106",
-      "pm10": "0093"
-    }
-  }
-}
-```
+| Command      | Category      | Syntax                                 | Arguments                | Description                        |
+|--------------|--------------|----------------------------------------|--------------------------|------------------------------------|
+| `power`      | Control       | `blowcontrol power <state>`            | `on|off`, `true|false`   | Turn the fan ON or OFF             |
+| `auto`       | Control       | `blowcontrol auto <state>`             | `on|off`, `true|false`   | Enable/disable auto mode           |
+| `night`      | Control       | `blowcontrol night <state>`            | `on|off`, `true|false`   | Enable/disable night mode          |
+| `speed`      | Control       | `blowcontrol speed <speed>`            | `0-10`                   | Set fan speed (0 turns off)        |
+| `timer`      | Control       | `blowcontrol timer <time>`             | `0-540`, `2h15m`, etc.   | Set sleep timer (0=off)            |
+| `listen`     | Monitoring    | `blowcontrol listen`                   | *(none)*                 | Real-time monitoring               |
+| `state`      | Monitoring    | `blowcontrol state         `           | *(none)*                 | Fetch current state                |
+| `width`      | Oscillation   | `blowcontrol width <width>`            | `off|narrow|medium|wide|full` | Set oscillation width        |
+| `direction`  | Oscillation   | `blowcontrol direction <degrees>`      | `0-359`                  | Set oscillation direction          |
 
 ---
 
@@ -109,21 +69,21 @@ python3 -m app state [--json]
 ```sh
 #!/bin/bash
 # Morning routine
-python3 -m app power on
-python3 -m app speed 3
-python3 -m app auto on
+blowcontrol power on
+blowcontrol speed 3
+blowcontrol auto on
 
 # Check status
-python3 -m app state --json | jq '.state.product-state.fpwr'
+blowcontrol state --json | jq '.state.product-state.fpwr'
 ```
 
 ### JSON Processing
 ```sh
 # Get current fan speed
-SPEED=$(python3 -m app state --json | jq -r '.state.product-state.fnsp')
+SPEED=$(blowcontrol state --json | jq -r '.state.product-state.fnsp')
 
 # Check if auto mode is enabled
-AUTO=$(python3 -m app state --json | jq -r '.state.product-state.auto')
+AUTO=$(blowcontrol state --json | jq -r '.state.product-state.auto')
 ```
 
 ### Python Integration
@@ -132,7 +92,7 @@ import json
 import subprocess
 
 # Get device state
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
+result = subprocess.run(['blowcontrol', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 
@@ -148,16 +108,15 @@ if state['success']:
 
 The app is designed with a modular architecture:
 
-- **`app/commands/`**: Individual command implementations
-- **`app/mqtt/`**: MQTT client and async wrapper
-- **`app/state/`**: Device state management and printing
-- **`app/cli.py`**: Command-line interface
-- **`app/config.py`**: Configuration management
+- **`blowcontrol/commands/`**: Individual command implementations
+- **`blowcontrol/mqtt/`**: MQTT client and async wrapper
+- **`blowcontrol/state/`**: Device state management and printing
+- **`blowcontrol/cli.py`**: Command-line interface
+- **`blowcontrol/config.py`**: Configuration management
 
 ### Key Components
 
 - **`DysonMQTTClient`**: Synchronous MQTT operations
-- **`async_get_state()`**: Asynchronous state fetching
 - **`DeviceStatePrinter`**: Formatted output for human consumption
 
 ---
@@ -184,7 +143,7 @@ The app is designed with a modular architecture:
 - Check that MQTT credentials from OpenDyson are correct
 
 ### Command Not Responding
-- Use `python3 -m app listen` to see if device is sending messages
+- Use `blowcontrol listen` to see if device is sending messages
 - Check logs for connection errors
 
 ### JSON Parsing
