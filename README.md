@@ -136,7 +136,7 @@ opendyson help
 - **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer, oscillation, direction
 - **📊 State Monitoring**: Real-time listening, on-demand state fetching
 - **🤖 JSON Output**: Machine-readable responses for automation
-- **🔧 Professional CLI**: Easy-to-use command-line interface
+- **🔧 Super hacker CLI**: Easy-to-use command-line interface
 
 ## 📖 Documentation
 
