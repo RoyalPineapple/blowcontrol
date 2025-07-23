@@ -5,13 +5,13 @@ Tests for oscillation angle calculations and conversions.
 
 import unittest
 from unittest.mock import patch
+
 from dyson2mqtt.commands.oscillation import (
-    set_oscillation_angles,
-    get_oscillation_info,
-    VALID_WIDTHS,
-    WIDTH_NAMES,
     WIDTH_DISPLAY_NAMES,
-    parse_width_input
+    WIDTH_NAMES,
+    get_oscillation_info,
+    parse_width_input,
+    set_oscillation_angles,
 )
 
 
@@ -21,7 +21,8 @@ class TestOscillationAngles(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         # Create a mock client that will be used by all oscillation functions
-        self.mock_client_patcher = patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
+        self.mock_client_patcher = patch(
+            'dyson2mqtt.commands.oscillation.DysonMQTTClient')
         self.mock_client_class = self.mock_client_patcher.start()
         self.mock_client = self.mock_client_class.return_value
         self.mock_client.send_standalone_command.return_value = True
@@ -40,7 +41,7 @@ class TestOscillationAngles(unittest.TestCase):
             (350, 0, 5, 355),      # Full width, front (adjusted for bounds)
             (0, 180, 180, 180),    # Off (no oscillation)
         ]
-        
+
         for width, heading, expected_lower, expected_upper in test_cases:
             with self.subTest(width=width, heading=heading):
                 result = set_oscillation_angles(width, heading)
@@ -48,19 +49,21 @@ class TestOscillationAngles(unittest.TestCase):
                 self.assertEqual(result["lower_angle"], expected_lower)
                 self.assertEqual(result["upper_angle"], expected_upper)
                 self.assertEqual(result["actual_width"], width)
-                # Heading might be adjusted for bounds, so don't test exact match
+                # Heading might be adjusted for bounds, so don't test exact
+                # match
 
     def test_angles_to_width_heading(self):
         """Test converting lower/upper angles back to width + heading."""
         test_cases = [
             # (lower, upper, expected_width, expected_heading)
             (135, 225, 90, 180),   # Medium width, center
-            (68, 112, 44, 90),     # Narrow width, right (note: 44 not 45 due to rounding)
+            # Narrow width, right (note: 44 not 45 due to rounding)
+            (68, 112, 44, 90),
             (175, 355, 180, 265),  # Wide width, back (adjusted)
             (5, 355, 350, 180),    # Full width, front (adjusted)
             (180, 180, 0, 180),    # Off (no oscillation)
         ]
-        
+
         for lower, upper, expected_width, expected_heading in test_cases:
             with self.subTest(lower=lower, upper=upper):
                 result = get_oscillation_info(f"{lower:04d}", f"{upper:04d}")
@@ -78,13 +81,13 @@ class TestOscillationAngles(unittest.TestCase):
             (180, 0, True),     # 0° heading -> -90° to 90° (invalid)
             (350, 180, False),  # 180° heading -> 5° to 355° (valid)
         ]
-        
+
         for width, heading, should_adjust in test_cases:
             with self.subTest(width=width, heading=heading):
                 result = set_oscillation_angles(width, heading)
                 self.assertTrue(result["success"])
                 self.assertEqual(result["adjusted"], should_adjust)
-                
+
                 # Check bounds are respected
                 self.assertGreaterEqual(result["lower_angle"], 5)
                 self.assertLessEqual(result["upper_angle"], 355)
@@ -92,7 +95,7 @@ class TestOscillationAngles(unittest.TestCase):
     def test_valid_widths(self):
         """Test that valid widths work correctly."""
         valid_widths = [0, 45, 90, 180, 350]
-        
+
         for width in valid_widths:
             with self.subTest(width=width):
                 result = set_oscillation_angles(width, 180)
@@ -113,7 +116,7 @@ class TestOscillationAngles(unittest.TestCase):
             ("180", 180),
             ("350", 350),
         ]
-        
+
         for input_name, expected_width in test_cases:
             with self.subTest(input_name=input_name):
                 result = parse_width_input(input_name)
@@ -122,7 +125,7 @@ class TestOscillationAngles(unittest.TestCase):
     def test_invalid_named_widths(self):
         """Test that invalid named widths are rejected."""
         invalid_names = ["invalid", "small", "large"]
-        
+
         for invalid_name in invalid_names:
             with self.subTest(invalid_name=invalid_name):
                 with self.assertRaises(ValueError):
@@ -152,14 +155,14 @@ class TestOscillationAngles(unittest.TestCase):
         self.assertEqual(result["lower_angle"], 5)
         self.assertEqual(result["upper_angle"], 49)
         self.assertTrue(result["adjusted"])
-        
+
         # Test maximum valid heading (gets adjusted)
         result = set_oscillation_angles(45, 355)
         self.assertTrue(result["success"])
         self.assertEqual(result["lower_angle"], 311)
         self.assertEqual(result["upper_angle"], 355)
         self.assertTrue(result["adjusted"])
-        
+
         # Test zero width (off)
         result = set_oscillation_angles(0, 180)
         self.assertTrue(result["success"])
@@ -174,27 +177,31 @@ class TestOscillationAngles(unittest.TestCase):
             (180, 270),
             (350, 0),
         ]
-        
+
         for width, heading in test_cases:
             with self.subTest(width=width, heading=heading):
                 # Convert to angles
                 result = set_oscillation_angles(width, heading)
                 self.assertTrue(result["success"])
-                
+
                 lower = result["lower_angle"]
                 upper = result["upper_angle"]
-                
+
                 # Convert back to width + heading
                 info = get_oscillation_info(f"{lower:04d}", f"{upper:04d}")
-                
+
                 # Width should be close (within 1° due to integer division)
                 width_diff = abs(info["width"] - result["actual_width"])
-                self.assertLessEqual(width_diff, 1, 
+                self.assertLessEqual(
+                    width_diff,
+                    1,
                     f"Width difference too large: {info['width']} vs {result['actual_width']}")
-                
+
                 # Heading should be close (within 1° due to integer division)
                 heading_diff = abs(info["heading"] - result["actual_heading"])
-                self.assertLessEqual(heading_diff, 1,
+                self.assertLessEqual(
+                    heading_diff,
+                    1,
                     f"Heading difference too large: {info['heading']} vs {result['actual_heading']}")
 
     def test_smart_adjustment_logic(self):
@@ -205,7 +212,7 @@ class TestOscillationAngles(unittest.TestCase):
         self.assertTrue(result["adjusted"])
         self.assertEqual(result["actual_width"], 90)  # Width preserved
         self.assertNotEqual(result["actual_heading"], 0)  # Heading adjusted
-        
+
         # Verify the adjusted heading puts angles within bounds
         self.assertGreaterEqual(result["lower_angle"], 5)
         self.assertLessEqual(result["upper_angle"], 355)
@@ -215,11 +222,11 @@ class TestOscillationAngles(unittest.TestCase):
         # Test normal case (no wrap-around)
         result = get_oscillation_info("0135", "0225")
         self.assertFalse(result["is_wrap_around"])
-        
+
         # Test wrap-around case (would need to be within bounds)
         # Note: Our implementation doesn't allow wrap-around in normal cases
         # but the detection logic exists
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2) 
+    unittest.main(verbosity=2)

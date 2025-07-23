@@ -2,26 +2,28 @@
 CLI entry point for Dyson2MQTT modular app.
 """
 import argparse
+import json
 import logging
 import sys
-from dyson2mqtt.commands.power import set_power
-from dyson2mqtt.commands.night_mode import set_night_mode
+
 from dyson2mqtt.commands.auto_mode import set_auto_mode
 from dyson2mqtt.commands.fan_speed import set_fan_speed
-from dyson2mqtt.commands.sleep_timer import set_sleep_timer
+from dyson2mqtt.commands.night_mode import set_night_mode
 from dyson2mqtt.commands.oscillation import (
-    stop_oscillation,
-    get_oscillation_info,
-    set_oscillation_width,
-    set_oscillation_direction,
-    WIDTH_DISPLAY_NAMES,
-    parse_width_input,
     VALID_WIDTHS,
+    WIDTH_DISPLAY_NAMES,
+    get_oscillation_info,
+    parse_width_input,
+    set_oscillation_direction,
+    set_oscillation_width,
+    stop_oscillation,
 )
-from dyson2mqtt.state.device_state import DeviceStatePrinter
+from dyson2mqtt.commands.power import set_power
+from dyson2mqtt.commands.sleep_timer import set_sleep_timer
 from dyson2mqtt.mqtt.client import DysonMQTTClient
+from dyson2mqtt.state.device_state import DeviceStatePrinter
 from dyson2mqtt.utils import parse_boolean
-import json
+
 
 def output_result(
     success: bool, message: str = "", data: dict = None, json_mode: bool = False
@@ -336,8 +338,9 @@ EXIT CODES:
                 sys.exit(1)
         elif args.command == "state":
             try:
-                from dyson2mqtt.mqtt.async_client import async_get_state
                 import asyncio
+
+                from dyson2mqtt.mqtt.async_client import async_get_state
                 
                 async def run_async_get_state():
                     return await async_get_state()
@@ -423,4 +426,5 @@ EXIT CODES:
         sys.exit(1)
 
 if __name__ == "__main__":
-    main() 
+    main()
+

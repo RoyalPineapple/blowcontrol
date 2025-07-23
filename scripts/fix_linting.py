@@ -32,11 +32,11 @@ def run_command(cmd, description):
 def main():
     """Main function to run all linting fixes."""
     print("🔧 Running linting fixes...")
-    
+
     # Get the project root
     project_root = Path(__file__).parent.parent
     os.chdir(project_root)
-    
+
     # List of commands to run
     commands = [
         ("find . -name '*.py' -exec sed -i '' 's/[[:space:]]*$//' {} \\;", "Remove trailing whitespace"),
@@ -44,12 +44,12 @@ def main():
         ("python3 -m black dyson2mqtt/ tests/ --line-length=88", "Format code with Black"),
         ("python3 -m isort dyson2mqtt/ tests/ --profile=black", "Sort imports with isort"),
     ]
-    
+
     success = True
     for cmd, description in commands:
         if not run_command(cmd, description):
             success = False
-    
+
     if success:
         print("\n🎉 All linting fixes completed successfully!")
         print("You can now commit your changes.")
@@ -59,4 +59,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
+

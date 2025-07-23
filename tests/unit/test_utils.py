@@ -3,6 +3,7 @@ Unit tests for utility functions.
 """
 
 import pytest
+
 from dyson2mqtt.utils import parse_boolean
 
 
@@ -66,25 +67,25 @@ class TestParseBoolean:
         """Test invalid inputs raise ValueError."""
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean("invalid")
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean("maybe")
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean("2")
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean(-1)
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean(None)
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean(1.5)
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean([])
-        
+
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean({})
 
@@ -93,13 +94,13 @@ class TestParseBoolean:
         # Empty string
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean("")
-        
+
         # Just whitespace
         with pytest.raises(ValueError, match="Cannot parse"):
             parse_boolean("   ")
-        
+
         # Mixed case variations
         assert parse_boolean("TrUe") is True
         assert parse_boolean("FaLsE") is False
         assert parse_boolean("On") is True
-        assert parse_boolean("OfF") is False 
+        assert parse_boolean("OfF") is False

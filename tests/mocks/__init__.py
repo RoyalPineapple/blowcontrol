@@ -1,1 +1,1 @@
-# Mock tests for Dyson2MQTT 
+# Mock tests for Dyson2MQTT

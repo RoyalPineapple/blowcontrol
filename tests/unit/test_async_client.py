@@ -3,13 +3,14 @@
 Tests for async MQTT client functionality.
 """
 
+from unittest.mock import patch
+
 import pytest
-import asyncio
-from unittest.mock import patch, AsyncMock, MagicMock
+
 from dyson2mqtt.mqtt.async_client import (
     async_get_state,
+    async_set_fan_speed,
     async_set_power,
-    async_set_fan_speed
 )
 
 
@@ -25,9 +26,9 @@ class TestAsyncClient:
                 'state': {'product-state': {'fpwr': ['ON', 'ON']}},
                 'environmental': {'data': [{'hact': '0001', 'pm25': '0002'}]}
             }
-            
+
             result = await async_get_state()
-            
+
             assert 'state' in result
             assert 'environmental' in result
             mock_to_thread.assert_called_once()
@@ -37,10 +38,11 @@ class TestAsyncClient:
     async def test_async_get_state_failure(self, mock_client_class):
         """Test async state retrieval failure."""
         with patch('dyson2mqtt.mqtt.async_client.asyncio.to_thread') as mock_to_thread:
-            mock_to_thread.return_value = {'state': None, 'environmental': None}
-            
+            mock_to_thread.return_value = {
+                'state': None, 'environmental': None}
+
             result = await async_get_state()
-            
+
             assert 'state' in result
             assert 'environmental' in result
             assert result['state'] is None
@@ -74,4 +76,4 @@ class TestAsyncClient:
             mock_to_thread.return_value = True
             result = await async_set_fan_speed(5)
             assert result is True
-            mock_to_thread.assert_called_once() 
+            mock_to_thread.assert_called_once()

@@ -2,18 +2,17 @@
 Pytest configuration and fixtures for Dyson2MQTT test suite.
 """
 
-import pytest
-import os
-import tempfile
-from unittest.mock import Mock, patch
 import json
+import os
 
 # Add the project root to the Python path
 import sys
+import tempfile
+from unittest.mock import Mock, patch
+
+import pytest
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-
-
 
 
 @pytest.fixture
@@ -26,7 +25,7 @@ def mock_env_vars():
         'ROOT_TOPIC': '438M',
         'SERIAL_NUMBER': '9HC-EU-TEST123'
     }
-    
+
     with patch.dict(os.environ, test_env):
         yield test_env
 
@@ -42,7 +41,7 @@ def mock_mqtt_client():
     mock_client.client_id = 'test-client'
     mock_client._connected = False
     mock_client._subscribed_topics = []
-    
+
     # Mock methods
     mock_client.connect.return_value = None
     mock_client.disconnect.return_value = None
@@ -52,7 +51,7 @@ def mock_mqtt_client():
     mock_client.send_standalone_command.return_value = True
     mock_client.set_boolean_state.return_value = None
     mock_client.set_numeric_state.return_value = None
-    
+
     return mock_client
 
 
@@ -109,9 +108,9 @@ ROOT_TOPIC=438M
 SERIAL_NUMBER=9HC-EU-TEST123
 """)
         temp_file = f.name
-    
+
     yield temp_file
-    
+
     # Cleanup
     try:
         os.unlink(temp_file)
@@ -141,4 +140,4 @@ def mock_logger():
     with patch('logging.getLogger') as mock_get_logger:
         mock_logger = Mock()
         mock_get_logger.return_value = mock_logger
-        yield mock_logger 
+        yield mock_logger

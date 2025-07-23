@@ -4,9 +4,11 @@ Sleep timer command module for Dyson2MQTT app.
 import logging
 import re
 from typing import Union
+
 from dyson2mqtt.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
+
 
 def parse_sleep_time(value: Union[str, int]) -> int:
     """
@@ -34,7 +36,8 @@ def parse_sleep_time(value: Union[str, int]) -> int:
                 minutes = int(parts[0]) * 60 + int(parts[1])
             else:
                 raise ValueError(f"Invalid time format: {value}")
-        # 2h15m or 1h or 45m (strict: only allow h then m, not mixed or out of order)
+        # 2h15m or 1h or 45m (strict: only allow h then m, not mixed or out of
+        # order)
         elif re.fullmatch(r"(\d+h)?(\d+m)?", s):
             hours = 0
             mins = 0
@@ -55,8 +58,10 @@ def parse_sleep_time(value: Union[str, int]) -> int:
     else:
         raise ValueError(f"Invalid type for sleep timer: {type(value)}")
     if not (0 <= minutes <= 540):
-        raise ValueError("Sleep timer must be between 0 and 540 minutes (0 = off).")
+        raise ValueError(
+            "Sleep timer must be between 0 and 540 minutes (0 = off).")
     return minutes
+
 
 def set_sleep_timer(value: Union[str, int]) -> bool:
     """
@@ -68,15 +73,15 @@ def set_sleep_timer(value: Union[str, int]) -> bool:
         minutes = parse_sleep_time(value)
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
-        
+
         if minutes == 0:
             client.set_numeric_state('sltm', 'OFF')
         else:
             minutes_str = f"{minutes:04d}"
             client.set_numeric_state('sltm', minutes_str)
-        
+
         client.disconnect()
         return True
     except Exception as e:
         logger.error(f"Failed to set sleep timer: {e}")
-        return False 
+        return False

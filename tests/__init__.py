@@ -1,1 +1,1 @@
-# Test suite for Dyson2MQTT 
+# Test suite for Dyson2MQTT

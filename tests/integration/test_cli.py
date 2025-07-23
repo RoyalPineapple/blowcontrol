@@ -2,12 +2,12 @@
 Integration tests for CLI interface.
 """
 
-import pytest
-import sys
-from unittest.mock import patch, Mock, call
 from io import StringIO
+from unittest.mock import patch
+
+import pytest
+
 from dyson2mqtt.cli import main
-import argparse
 
 
 class TestCLI:
@@ -16,25 +16,23 @@ class TestCLI:
     def test_cli_help(self):
         """Test CLI help output."""
         with patch('sys.argv', ['dyson2mqtt', '--help']):
-            with patch('sys.stdout', StringIO()) as mock_stdout:
-                with patch('argparse.ArgumentParser.print_help') as mock_help:
-                    # This will raise SystemExit when --help is used
-                    with pytest.raises(SystemExit):
-                        main()
-                    mock_help.assert_called_once()
+            with patch('argparse.ArgumentParser.print_help') as mock_help:
+                # This will raise SystemExit when --help is used
+                with pytest.raises(SystemExit):
+                    main()
+                mock_help.assert_called_once()
 
     def test_cli_no_command(self):
         """Test CLI with no command specified."""
         with patch('sys.argv', ['dyson2mqtt']):
-            with patch('sys.stderr', StringIO()) as mock_stderr:
-                with pytest.raises(SystemExit):
-                    main()
+            with pytest.raises(SystemExit):
+                main()
 
     @patch('dyson2mqtt.cli.set_power')
     def test_cli_power_on(self, mock_set_power):
         """Test CLI power on command."""
         mock_set_power.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'power', 'on']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -47,7 +45,7 @@ class TestCLI:
     def test_cli_power_off(self, mock_set_power):
         """Test CLI power off command."""
         mock_set_power.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'power', 'off']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -60,7 +58,7 @@ class TestCLI:
     def test_cli_speed(self, mock_set_speed):
         """Test CLI speed command."""
         mock_set_speed.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'speed', '5']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -73,7 +71,7 @@ class TestCLI:
     def test_cli_auto_on(self, mock_set_auto):
         """Test CLI auto mode on command."""
         mock_set_auto.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'auto', 'on']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -86,7 +84,7 @@ class TestCLI:
     def test_cli_night_on(self, mock_set_night):
         """Test CLI night mode on command."""
         mock_set_night.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'night', 'on']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -99,7 +97,7 @@ class TestCLI:
     def test_cli_timer(self, mock_set_timer):
         """Test CLI timer command."""
         mock_set_timer.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'timer', '30']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -111,27 +109,24 @@ class TestCLI:
     def test_cli_invalid_speed(self):
         """Test CLI with invalid speed."""
         with patch('sys.argv', ['dyson2mqtt', 'speed', '11']):
-            with patch('sys.stdout', StringIO()) as mock_stdout:
-                with patch('sys.stderr', StringIO()) as mock_stderr:
-                    with pytest.raises(SystemExit):
-                        main()
+            with pytest.raises(SystemExit):
+                main()
 
     def test_cli_invalid_power_state(self):
         """Test CLI with invalid power state."""
         with patch('dyson2mqtt.commands.power.set_power') as mock_set_power:
-            mock_set_power.side_effect = ValueError("Cannot parse 'invalid' as boolean")
-            
+            mock_set_power.side_effect = ValueError(
+                "Cannot parse 'invalid' as boolean")
+
             with patch('sys.argv', ['dyson2mqtt', 'power', 'invalid']):
-                with patch('sys.stdout', StringIO()) as mock_stdout:
-                    with patch('sys.stderr', StringIO()) as mock_stderr:
-                        with pytest.raises(SystemExit):
-                            main()
+                with pytest.raises(SystemExit):
+                    main()
 
     @patch('dyson2mqtt.cli.set_power')
     def test_cli_json_output(self, mock_set_power):
         """Test CLI JSON output format."""
         mock_set_power.return_value = True
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'power', 'on', '--json']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -143,7 +138,7 @@ class TestCLI:
     def test_cli_error_json_output(self, mock_set_power):
         """Test CLI JSON output format for errors."""
         mock_set_power.return_value = False
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'power', 'on', '--json']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -154,37 +149,43 @@ class TestCLI:
     def test_cli_debug_flag(self):
         """Test CLI debug flag."""
         with patch('sys.argv', ['dyson2mqtt', '--debug', '--help']):
-            with patch('sys.stdout', StringIO()) as mock_stdout:
-                with patch('argparse.ArgumentParser.print_help') as mock_help:
-                    with pytest.raises(SystemExit):
-                        main()
-                    mock_help.assert_called_once()
+            with patch('argparse.ArgumentParser.print_help') as mock_help:
+                with pytest.raises(SystemExit):
+                    main()
+                mock_help.assert_called_once()
 
 
 class TestCLIState:
     """Test CLI state command specifically."""
 
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
-    def test_cli_state(self, mock_get_state, sample_device_state, sample_environmental_data):
+    def test_cli_state(
+            self,
+            mock_get_state,
+            sample_device_state,
+            sample_environmental_data):
         """Test CLI state command."""
         mock_get_state.return_value = {
             'state': sample_device_state,
             'environmental': sample_environmental_data
         }
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'state']):
-            with patch('sys.stdout', StringIO()) as mock_stdout:
-                main()
-                mock_get_state.assert_called_once()
+            main()
+            mock_get_state.assert_called_once()
 
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
-    def test_cli_state_json(self, mock_get_state, sample_device_state, sample_environmental_data):
+    def test_cli_state_json(
+            self,
+            mock_get_state,
+            sample_device_state,
+            sample_environmental_data):
         """Test CLI state command with JSON output."""
         mock_get_state.return_value = {
             'state': sample_device_state,
             'environmental': sample_environmental_data
         }
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'state', '--json']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -200,7 +201,7 @@ class TestCLIOscillation:
     def test_cli_oscillation_width(self, mock_set_width):
         """Test CLI oscillation width command."""
         mock_set_width.return_value = {'success': True, 'actual_width': 90}
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'width', 'medium']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -211,8 +212,9 @@ class TestCLIOscillation:
     @patch('dyson2mqtt.cli.set_oscillation_direction')
     def test_cli_oscillation_heading(self, mock_set_direction):
         """Test CLI oscillation direction command."""
-        mock_set_direction.return_value = {'success': True, 'actual_heading': 90}
-        
+        mock_set_direction.return_value = {
+            'success': True, 'actual_heading': 90}
+
         with patch('sys.argv', ['dyson2mqtt', 'direction', '90']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
@@ -224,10 +226,10 @@ class TestCLIOscillation:
     def test_cli_oscillation_stop(self, mock_stop):
         """Test CLI oscillation stop command."""
         mock_stop.return_value = {'success': True}
-        
+
         with patch('sys.argv', ['dyson2mqtt', 'stop']):
             with patch('sys.stdout', StringIO()) as mock_stdout:
                 main()
                 output = mock_stdout.getvalue()
                 assert '✓' in output
-                mock_stop.assert_called_once() 
+                mock_stop.assert_called_once()

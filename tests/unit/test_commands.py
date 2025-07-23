@@ -2,25 +2,24 @@
 Unit tests for command modules.
 """
 
-import pytest
 from unittest.mock import Mock, patch
-from dyson2mqtt.commands.power import set_power, request_current_state
-from dyson2mqtt.commands.fan_speed import set_fan_speed, validate_fan_speed
+
+import pytest
+
 from dyson2mqtt.commands.auto_mode import set_auto_mode
+from dyson2mqtt.commands.fan_speed import set_fan_speed, validate_fan_speed
 from dyson2mqtt.commands.night_mode import set_night_mode
-from dyson2mqtt.commands.sleep_timer import set_sleep_timer, parse_sleep_time
 from dyson2mqtt.commands.oscillation import (
-    set_oscillation_angles, 
-    stop_oscillation, 
     get_oscillation_info,
     parse_width_input,
-    set_oscillation_width,
+    set_oscillation_angles,
     set_oscillation_direction,
+    set_oscillation_width,
+    stop_oscillation,
     stop_oscillation_dict,
-    VALID_WIDTHS,
-    WIDTH_NAMES,
-    WIDTH_DISPLAY_NAMES
 )
+from dyson2mqtt.commands.power import request_current_state, set_power
+from dyson2mqtt.commands.sleep_timer import parse_sleep_time, set_sleep_timer
 
 
 class TestPowerCommands:
@@ -28,13 +27,17 @@ class TestPowerCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.power.DysonMQTTClient')
-    def test_set_power_on(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_power_on(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting power ON."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_power(True)
-        
+
         assert result is True
         mock_client.connect.assert_called_once()
         mock_client.set_boolean_state.assert_called_once_with('fpwr', True)
@@ -42,54 +45,85 @@ class TestPowerCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.power.DysonMQTTClient')
-    def test_set_power_off(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_power_off(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting power OFF."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_power(False)
-        
+
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('fpwr', False)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.power.DysonMQTTClient')
-    def test_set_power_flexible_inputs(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_power_flexible_inputs(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test power command with various flexible boolean inputs."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         # Test string inputs
-        for true_input in ["true", "TRUE", "t", "T", "1", "on", "ON", "yes", "YES", "y", "Y"]:
+        for true_input in [
+            "true",
+            "TRUE",
+            "t",
+            "T",
+            "1",
+            "on",
+            "ON",
+            "yes",
+            "YES",
+            "y",
+                "Y"]:
             mock_client.reset_mock()
             result = set_power(true_input)
             assert result is True
             mock_client.set_boolean_state.assert_called_once_with('fpwr', True)
-        
+
         # Test various false inputs
-        for false_input in ["false", "FALSE", "f", "F", "0", "off", "OFF", "no", "NO", "n", "N"]:
+        for false_input in [
+            "false",
+            "FALSE",
+            "f",
+            "F",
+            "0",
+            "off",
+            "OFF",
+            "no",
+            "NO",
+            "n",
+                "N"]:
             mock_client.reset_mock()
             result = set_power(false_input)
             assert result is True
-            mock_client.set_boolean_state.assert_called_once_with('fpwr', False)
-        
+            mock_client.set_boolean_state.assert_called_once_with(
+                'fpwr', False)
+
         # Test integer inputs
         mock_client.reset_mock()
         result = set_power(1)
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('fpwr', True)
-        
+
         mock_client.reset_mock()
         result = set_power(0)
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('fpwr', False)
-        
+
         # Test boolean inputs
         mock_client.reset_mock()
         result = set_power(True)
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('fpwr', True)
-        
+
         mock_client.reset_mock()
         result = set_power(False)
         assert result is True
@@ -97,14 +131,18 @@ class TestPowerCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.power.DysonMQTTClient')
-    def test_set_power_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_power_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test power command error handling."""
         mock_client = Mock()
         mock_client.connect.side_effect = Exception("Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_power(True)
-        
+
         assert result is False
 
     def test_set_power_invalid_boolean(self):
@@ -114,15 +152,20 @@ class TestPowerCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.power.DysonMQTTClient')
-    def test_request_current_state(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_request_current_state(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test requesting current state."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         request_current_state()
-        
+
         mock_client.connect.assert_called_once()
-        mock_client.send_command.assert_called_once_with("REQUEST-CURRENT-STATE")
+        mock_client.send_command.assert_called_once_with(
+            "REQUEST-CURRENT-STATE")
         mock_client.disconnect.assert_called_once()
 
 
@@ -150,7 +193,7 @@ class TestFanSpeedCommands:
         assert validate_fan_speed("5") == 5
         assert validate_fan_speed("0") == 0
         assert validate_fan_speed("10") == 10
-        
+
         # Test integer inputs
         assert validate_fan_speed(5) == 5
         assert validate_fan_speed(0) == 0
@@ -165,54 +208,71 @@ class TestFanSpeedCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.fan_speed.DysonMQTTClient')
-    def test_set_fan_speed_valid(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_fan_speed_valid(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting valid fan speed."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_fan_speed(5)
-        
+
         assert result is True
         mock_client.set_numeric_state.assert_called_once_with('fnsp', '0005')
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.fan_speed.set_power')
     @patch('dyson2mqtt.commands.fan_speed.DysonMQTTClient')
-    def test_set_fan_speed_zero(self, mock_client_class, mock_set_power, mock_paho_client, mock_env_vars):
+    def test_set_fan_speed_zero(
+            self,
+            mock_client_class,
+            mock_set_power,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting fan speed to 0 (power off)."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
         mock_set_power.return_value = True
-        
+
         result = set_fan_speed(0)
-        
+
         assert result is True
         mock_set_power.assert_called_once_with(False)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.fan_speed.DysonMQTTClient')
-    def test_set_fan_speed_invalid(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_fan_speed_invalid(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting invalid fan speed."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         # set_fan_speed catches ValueError and returns False
         result = set_fan_speed(11)
         assert result is False
-        
+
         result = set_fan_speed(-1)
         assert result is False
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.fan_speed.DysonMQTTClient')
-    def test_set_fan_speed_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_fan_speed_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test fan speed command error handling."""
         mock_client = Mock()
         mock_client.connect.side_effect = Exception("Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_fan_speed(5)
-        
+
         assert result is False
 
 
@@ -221,38 +281,50 @@ class TestAutoModeCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.auto_mode.DysonMQTTClient')
-    def test_set_auto_mode_on(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_auto_mode_on(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting auto mode ON."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_auto_mode(True)
-        
+
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('auto', True)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.auto_mode.DysonMQTTClient')
-    def test_set_auto_mode_off(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_auto_mode_off(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting auto mode OFF."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_auto_mode(False)
-        
+
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('auto', False)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.auto_mode.DysonMQTTClient')
-    def test_set_auto_mode_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_auto_mode_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test auto mode command error handling."""
         mock_client = Mock()
         mock_client.connect.side_effect = Exception("Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_auto_mode(True)
-        
+
         assert result is False
 
 
@@ -261,38 +333,50 @@ class TestNightModeCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.night_mode.DysonMQTTClient')
-    def test_set_night_mode_on(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_night_mode_on(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting night mode ON."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_night_mode(True)
-        
+
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('nmod', True)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.night_mode.DysonMQTTClient')
-    def test_set_night_mode_off(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_night_mode_off(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting night mode OFF."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_night_mode(False)
-        
+
         assert result is True
         mock_client.set_boolean_state.assert_called_once_with('nmod', False)
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.night_mode.DysonMQTTClient')
-    def test_set_night_mode_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_night_mode_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test night mode command error handling."""
         mock_client = Mock()
         mock_client.connect.side_effect = Exception("Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_night_mode(True)
-        
+
         assert result is False
 
 
@@ -352,38 +436,50 @@ class TestSleepTimerCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.sleep_timer.DysonMQTTClient')
-    def test_set_sleep_timer(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_sleep_timer(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting sleep timer."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_sleep_timer(30)
-        
+
         assert result is True
         mock_client.set_numeric_state.assert_called_once_with('sltm', '0030')
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.sleep_timer.DysonMQTTClient')
-    def test_set_sleep_timer_zero(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_sleep_timer_zero(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting sleep timer to 0 (off)."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
-        
+
         result = set_sleep_timer(0)
-        
+
         assert result is True
         mock_client.set_numeric_state.assert_called_once_with('sltm', 'OFF')
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.sleep_timer.DysonMQTTClient')
-    def test_set_sleep_timer_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_sleep_timer_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test sleep timer command error handling."""
         mock_client = Mock()
         mock_client.connect.side_effect = Exception("Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_sleep_timer(30)
-        
+
         assert result is False
 
 
@@ -424,14 +520,18 @@ class TestOscillationCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_angles_valid(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_angles_valid(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting valid oscillation angles."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         result = set_oscillation_angles(90, 180)
-        
+
         assert result["success"] is True
         assert result["actual_width"] == 90
         assert result["actual_heading"] == 180
@@ -441,14 +541,15 @@ class TestOscillationCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_angles_zero_width(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_angles_zero_width(
+            self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test setting oscillation with zero width (heading only)."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         result = set_oscillation_angles(0, 270)
-        
+
         assert result["success"] is True
         assert result["actual_width"] == 0
         assert result["actual_heading"] == 270
@@ -470,15 +571,18 @@ class TestOscillationCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_angles_bounds_adjustment(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_angles_bounds_adjustment(
+            self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test bounds adjustment for oscillation angles."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
-        # Test that heading gets adjusted when it would cause out-of-bounds angles
-        result = set_oscillation_angles(90, 2)  # 2° heading would cause -43° to 47° (invalid)
-        
+
+        # Test that heading gets adjusted when it would cause out-of-bounds
+        # angles
+        # 2° heading would cause -43° to 47° (invalid)
+        result = set_oscillation_angles(90, 2)
+
         assert result["success"] is True
         assert result["actual_width"] == 90
         assert result["adjusted"] is True
@@ -489,15 +593,17 @@ class TestOscillationCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_angles_wrap_around(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_angles_wrap_around(
+            self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test wrap-around case handling."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         # Test wrap-around case (e.g., 350° to 10°)
-        result = set_oscillation_angles(180, 0)  # 0° heading with 180° width would cause -90° to 90°
-        
+        # 0° heading with 180° width would cause -90° to 90°
+        result = set_oscillation_angles(180, 0)
+
         assert result["success"] is True
         assert result["actual_width"] == 180
         assert result["adjusted"] is True
@@ -507,57 +613,75 @@ class TestOscillationCommands:
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_angles_error(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_angles_error(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test oscillation command error handling."""
         mock_client = Mock()
-        mock_client.send_standalone_command.side_effect = Exception("Connection failed")
+        mock_client.send_standalone_command.side_effect = Exception(
+            "Connection failed")
         mock_client_class.return_value = mock_client
-        
+
         result = set_oscillation_angles(90, 180)
-        
+
         assert result["success"] is False
         assert "error" in result
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_stop_oscillation(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_stop_oscillation(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test stopping oscillation."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         result = stop_oscillation()
-        
+
         assert result is True
         mock_client.send_standalone_command.assert_called_once()
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_stop_oscillation_dict(self, mock_client_class, mock_paho_client, mock_env_vars):
+    def test_stop_oscillation_dict(
+            self,
+            mock_client_class,
+            mock_paho_client,
+            mock_env_vars):
         """Test stopping oscillation with dict return."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         result = stop_oscillation_dict()
-        
+
         assert result["success"] is True
         mock_client.send_standalone_command.assert_called_once()
 
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_width(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_width(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting oscillation width."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         # Mock the async state call to return a fallback
         mock_async_get_state.return_value = None
-        
+
         result = set_oscillation_width("medium")
-        
+
         assert result["success"] is True
         assert result["actual_width"] == 90
         mock_client.send_standalone_command.assert_called_once()
@@ -565,13 +689,18 @@ class TestOscillationCommands:
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_width_invalid(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_width_invalid(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting invalid oscillation width."""
         # Mock the async state call
         mock_async_get_state.return_value = None
-        
+
         result = set_oscillation_width("invalid")
-        
+
         assert result["success"] is False
         assert "error" in result
         assert "Invalid width name" in result["error"]
@@ -579,15 +708,21 @@ class TestOscillationCommands:
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_width_adjustment(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_width_adjustment(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test that invalid widths get adjusted to valid ones."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
-        # Mock the async state call to return None (fallback to default heading)
+
+        # Mock the async state call to return None (fallback to default
+        # heading)
         mock_async_get_state.return_value = None
-        
+
         # Test that 44 gets adjusted to 45 (narrow)
         result = set_oscillation_width("44")
         assert result["success"] is True
@@ -595,7 +730,7 @@ class TestOscillationCommands:
         assert result["width_adjusted"] is True
         assert result["requested_width"] == "44"
         assert result["adjusted_width"] == "narrow"
-        
+
         # Test that 351 gets adjusted to 350 (full)
         result = set_oscillation_width("351")
         assert result["success"] is True
@@ -607,17 +742,22 @@ class TestOscillationCommands:
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_width_zero(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_width_zero(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting oscillation width to zero (off)."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
+
         # Mock the async state call
         mock_async_get_state.return_value = None
-        
+
         result = set_oscillation_width("off")
-        
+
         assert result["success"] is True
         assert result["actual_width"] == 0
         assert result["adjusted_width"] == "off"
@@ -625,17 +765,23 @@ class TestOscillationCommands:
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_direction(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_direction(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting oscillation direction."""
         mock_client = Mock()
         mock_client.send_standalone_command.return_value = True
         mock_client_class.return_value = mock_client
-        
-        # Mock the async state call to return None (fallback to default behavior)
+
+        # Mock the async state call to return None (fallback to default
+        # behavior)
         mock_async_get_state.return_value = None
-        
+
         result = set_oscillation_direction(270)
-        
+
         assert result["success"] is True
         assert result["actual_heading"] == 270
         mock_client.send_standalone_command.assert_called_once()
@@ -643,15 +789,20 @@ class TestOscillationCommands:
     @patch('paho.mqtt.client.Client')
     @patch('dyson2mqtt.mqtt.async_client.async_get_state')
     @patch('dyson2mqtt.commands.oscillation.DysonMQTTClient')
-    def test_set_oscillation_direction_invalid(self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars):
+    def test_set_oscillation_direction_invalid(
+            self,
+            mock_client_class,
+            mock_async_get_state,
+            mock_paho_client,
+            mock_env_vars):
         """Test setting invalid oscillation direction."""
         # Mock the async state call
         mock_async_get_state.return_value = None
-        
+
         result = set_oscillation_direction(-1)
         assert result["success"] is False
         assert "Heading must be between 0° and 359°" in result["error"]
-        
+
         result = set_oscillation_direction(360)
         assert result["success"] is False
-        assert "Heading must be between 0° and 359°" in result["error"] 
+        assert "Heading must be between 0° and 359°" in result["error"]

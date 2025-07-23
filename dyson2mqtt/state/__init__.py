@@ -8,9 +8,9 @@ Classes:
     DeviceStateListener: Thread-safe background state monitoring
 """
 
-from .device_state import DeviceStatePrinter, DeviceStateListener
+from .device_state import DeviceStateListener, DeviceStatePrinter
 
 __all__ = [
     "DeviceStatePrinter",
     "DeviceStateListener"
-] 
+]

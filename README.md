@@ -4,7 +4,7 @@
 [![Tests](https://github.com/RoyalPineapple/dyson2mqtt/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/dyson2mqtt/actions)
 [![Codecov](https://codecov.io/gh/RoyalPineapple/dyson2mqtt/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/dyson2mqtt)
 
-A modular Python application for controlling Dyson fans via MQTT with support for real-time monitoring, async operations, and machine-readable JSON output.
+A simple application for controlling Dyson fans via MQTT with support for real-time monitoring, async operations, and machine-readable JSON output.
 
 ## 🚀 Quick Start
 
@@ -37,12 +37,11 @@ A modular Python application for controlling Dyson fans via MQTT with support fo
 
 ## ✨ Features
 
-- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer
+- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer, 
+oscillation, direction 
 - **📊 State Monitoring**: Real-time listening, on-demand state fetching  
-- **⚡ Async Support**: Non-blocking operations with async/await
 - **🤖 JSON Output**: Machine-readable responses for automation
-- **🔧 Thread-Safe**: Background listeners with proper synchronization
-- **🎨 Clean CLI**: Professional interface with helpful output
+
 
 ## 📖 Documentation
 

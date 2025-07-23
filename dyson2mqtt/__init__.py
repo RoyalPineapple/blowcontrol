@@ -20,4 +20,4 @@ __url__ = "https://github.com/yourusername/dyson2mqtt"
 # Main CLI entry point
 from .cli import main
 
-__all__ = ["main"] 
+__all__ = ["main"]

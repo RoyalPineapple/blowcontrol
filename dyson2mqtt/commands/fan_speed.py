@@ -3,10 +3,12 @@ Fan speed command module for Dyson2MQTT app.
 """
 import logging
 from typing import Any, Union
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+
 from dyson2mqtt.commands.power import set_power
+from dyson2mqtt.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
+
 
 def parse_int_input(value) -> int:
     """
@@ -20,6 +22,7 @@ def parse_int_input(value) -> int:
     else:
         raise ValueError(f"Cannot convert {value} to integer")
 
+
 def validate_fan_speed(speed: Union[int, str, Any]) -> int:
     """
     Validate and normalize fan speed. Returns int if valid, raises ValueError if not.
@@ -29,13 +32,14 @@ def validate_fan_speed(speed: Union[int, str, Any]) -> int:
         raise ValueError("Fan speed must be between 0 and 10.")
     return speed_int
 
+
 def set_fan_speed(speed: Union[int, str]) -> bool:
     """
     Set the Dyson device fan speed (0-10) via MQTT.
-    
+
     Args:
         speed: Fan speed as integer or string (0-10). 0 will power off the fan.
-    
+
     Returns True if successful, False otherwise.
     """
     try:
@@ -43,7 +47,7 @@ def set_fan_speed(speed: Union[int, str]) -> bool:
         if validated_speed == 0:
             # Speed 0 means turn off the fan
             return set_power(False)
-        
+
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
         speed_str = f"{validated_speed:04d}"
@@ -52,4 +56,4 @@ def set_fan_speed(speed: Union[int, str]) -> bool:
         return True
     except Exception as e:
         logger.error(f"Failed to set fan speed: {e}")
-        return False 
+        return False
