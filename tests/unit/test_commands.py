@@ -611,7 +611,7 @@ class TestOscillationCommands:
         mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
@@ -631,7 +631,7 @@ class TestOscillationCommands:
         mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_invalid(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
@@ -647,7 +647,7 @@ class TestOscillationCommands:
         assert "Invalid width name" in result["error"]
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_adjustment(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
@@ -678,7 +678,7 @@ class TestOscillationCommands:
         assert result["adjusted_width"] == "full"
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_zero(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
@@ -698,7 +698,7 @@ class TestOscillationCommands:
         assert result["adjusted_width"] == "off"
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_direction(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
@@ -719,7 +719,7 @@ class TestOscillationCommands:
         mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.mqtt.async_client.async_get_state")
+    @patch("blowcontrol.mqtt.async_client.async_get_state")
     @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_direction_invalid(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars

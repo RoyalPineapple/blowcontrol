@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+from blowcontrol.mqtt.client import DysonMQTTClient
 
 
 class TestDysonMQTTClient:
@@ -228,7 +228,7 @@ class TestDysonMQTTClient:
         # Should generate a unique client ID
         assert client.client_id is not None
         assert len(client.client_id) > 0
-        assert "dyson2mqtt" in client.client_id.lower()
+        assert "blowcontrol" in client.client_id.lower()
 
     @patch("paho.mqtt.client.Client")
     def test_on_connect_callback(self, mock_mqtt_client, mock_env_vars):

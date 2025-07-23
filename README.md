@@ -6,20 +6,20 @@
 [![Tests](https://github.com/RoyalPineapple/blowcontrol/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/blowcontrol/actions)
 [![Codecov](https://codecov.io/gh/RoyalPineapple/blowcontrol/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/blowcontrol)
 
-**BlowControl** is a hacky, irreverent command-line app for bossing your Dyson fan around via MQTT. Vibe-coded in a caffeine-fueled 48-hour sprint, it’s held together by zip ties, hope, and a lot of `--json` output. If you want a “professional” solution, look elsewhere—this is for tinkerers, automation goblins, and people who like yelling at their appliances from the terminal.
+**BlowControl** is a command-line app for controlling Dyson fans over MQTT. It was built quickly, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you want a polished, enterprise-grade solution, keep looking.
 
 ---
 
-## 🚀 Quick Start (No Warranty, No Regrets)
+## 🚀 Quick Start
 
 1. **Install**
    ```bash
-   pip install -e .   # For the reckless
+   pip install -e .   # Dev mode
    # or
-   pip install .      # For the slightly less reckless
+   pip install .      # Standard
    ```
 
-2. **Configure** (make a `.env` file, pray to the IoT gods):
+2. **Configure** (create a `.env` file):
    ```ini
    DEVICE_IP=192.168.1.100
    MQTT_PORT=1883
@@ -28,45 +28,45 @@
    SERIAL_NUMBER=XXX-XX-XXXXXXXX
    ```
 
-3. **Boss your fan around**:
+3. **Control your device**:
    ```bash
    blowcontrol power on
    blowcontrol speed 5
    blowcontrol listen
    blowcontrol state --json
    ```
-   > **Note:** All commands support the `--json` flag for machine-readable output—because who doesn’t want to parse their fan’s feelings in a shell script?
+   > **Note:** All commands support the `--json` flag for machine-readable output. Scripting is expected.
 
 ---
 
-## 🔑 Getting Device Credentials (The Annoying Part)
+## 🔑 Getting Device Credentials
 
-You’ll need MQTT credentials from your Dyson device. Dyson doesn’t want you to have them, but [OpenDyson](https://github.com/libdyson-wg/opendyson) exists:
+You’ll need MQTT credentials from your Dyson device. Dyson doesn’t make this easy. Use [OpenDyson](https://github.com/libdyson-wg/opendyson):
 
 ```bash
-# Install OpenDyson (Go required, sorry)
+# Install OpenDyson (requires Go)
  go install github.com/libdyson-wg/opendyson
 
-# Log in and extract your precious secrets
+# Log in and extract credentials
  opendyson login
  opendyson devices
 ```
 
-Copy the credentials into your `.env` file and try not to leak them on Twitter.
+Copy the credentials into your `.env` file. Don’t lose them.
 
 ---
 
-## ✨ Features (Such As They Are)
+## ✨ Features
 
-- Tell your Dyson fan what to do: power, speed, auto mode, night mode, sleep timer, oscillation, direction
-- Spy on your fan’s state: real-time and on-demand
-- Universal `--json` output for all commands (robots love it)
-- Async/await support so your scripts don’t block and you can feel modern
-- CLI with argparse and proper exit codes (sometimes)
+- Control your Dyson fan: power, speed, auto mode, night mode, sleep timer, oscillation, direction
+- State monitoring: real-time and on-demand
+- Universal `--json` output for all commands
+- Async/await support for non-blocking operations
+- CLI with argparse and proper exit codes
 
 ---
 
-## 📖 Command Reference (You’ll Forget These)
+## 📖 Command Reference
 
 | Command      | Category      | Syntax                                 | Arguments                | Description                        |
 |--------------|--------------|----------------------------------------|--------------------------|------------------------------------|
@@ -85,7 +85,7 @@ Copy the credentials into your `.env` file and try not to leak them on Twitter.
 
 ---
 
-## ⚡ Quick Examples (Copy, Paste, Hope)
+## ⚡ Quick Examples
 
 ```bash
 # Basic control
@@ -109,7 +109,7 @@ blowcontrol power on --json
 STATUS=$(blowcontrol state --json)
 ```
 
-### Python Integration (Because Why Not)
+### Python Integration
 ```python
 import json, subprocess
 result = subprocess.run(['blowcontrol', 'state', '--json'], capture_output=True, text=True)
@@ -120,15 +120,15 @@ if state['success']:
 
 ---
 
-## 🛠️ Troubleshooting (You’ll Need This)
-- **Connection issues**: Check `.env` and network. Or just reboot everything.
-- **No response**: Use `blowcontrol listen` to see if your fan is ghosting you.
-- **JSON parsing**: Use `--json` and pipe to `jq` or similar. Blame the fan if it’s weird.
-- **Command not found**: Did you actually install it? Try `pip install -e .`.
+## 🛠️ Troubleshooting
+- **Connection issues**: Check `.env` and your network.
+- **No response**: Use `blowcontrol listen` to see if your fan is even listening.
+- **JSON parsing**: Use `--json` and pipe to `jq` or similar. If it’s weird, it’s probably the fan.
+- **Command not found**: Did you install it? Try `pip install -e .`.
 
 ---
 
-## 🏗️ Development & Contributing (You Maniac)
+## 🏗️ Development & Contributing
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for code style, PR process, and dev setup
 - See [tests/README.md](tests/README.md) for test suite usage and patterns
 - Run tests: `pytest tests/`
@@ -141,7 +141,7 @@ MIT License. See [LICENSE](LICENSE).
 
 ---
 
-**Now you're ready to control your Dyson device like a total fool!** 🌪️
+**Now you can control your Dyson device from the terminal. Don’t blame me if it blows up.**
 
 ## 📚 More Documentation
 - [App Documentation](./blowcontrol/README.md) - Internal usage, architecture, and extending
