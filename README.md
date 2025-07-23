@@ -6,7 +6,7 @@
 [![Tests](https://github.com/RoyalPineapple/blowcontrol/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/blowcontrol/actions)
 [![Codecov](https://codecov.io/gh/RoyalPineapple/blowcontrol/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/blowcontrol)
 
-**BlowControl** is a command-line app for controlling Dyson fans over MQTT. It was built hastily and without care, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
+**BlowControl** is a command-line app for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
 
 ---
 
@@ -66,26 +66,19 @@ Copy the credentials into your `.env` file. Don’t lose them.
 
 ---
 
-## 📖 Basic Usage
+## 📖 Command Reference
 
-```bash
-# Power control
-blowcontrol power on|off
-
-# Fan settings
-blowcontrol speed 0-10
-blowcontrol auto on|off
-blowcontrol night on|off
-blowcontrol timer 2h15m|off
-
-# Oscillation
-blowcontrol width off|narrow|medium|wide|full
-blowcontrol direction 0-359
-
-# Monitoring
-blowcontrol listen
-blowcontrol state [--json]
-```
+| Command      | Category      | Syntax                                 | Arguments                | Description                        |
+|--------------|--------------|----------------------------------------|--------------------------|------------------------------------|
+| `power`      | Control       | `blowcontrol power <state>`            | `on|off`, `true|false`   | Turn the fan ON or OFF             |
+| `auto`       | Control       | `blowcontrol auto <state>`             | `on|off`, `true|false`   | Enable/disable auto mode           |
+| `night`      | Control       | `blowcontrol night <state>`            | `on|off`, `true|false`   | Enable/disable night mode          |
+| `speed`      | Control       | `blowcontrol speed <speed>`            | `0-10`                   | Set fan speed (0 turns off)        |
+| `timer`      | Control       | `blowcontrol timer <time>`             | `0-540`, `2h15m`, etc.   | Set sleep timer (0=off)            |
+| `listen`     | Monitoring    | `blowcontrol listen`                   | *(none)*                 | Real-time monitoring               |
+| `state`      | Monitoring    | `blowcontrol state         `           | *(none)*                 | Fetch current state                |
+| `width`      | Oscillation   | `blowcontrol width <width>`            | `off|narrow|medium|wide|full` | Set oscillation width        |
+| `direction`  | Oscillation   | `blowcontrol direction <degrees>`      | `0-359`                  | Set oscillation direction          |
 
 > **All commands support `--json` for machine-readable output.**
 
@@ -94,16 +87,24 @@ blowcontrol state [--json]
 ## ⚡ Quick Examples
 
 ```bash
-# Turn on and set up
+# Basic control
 blowcontrol power on
 blowcontrol speed 5
-blowcontrol width wide
+blowcontrol auto on
+blowcontrol night on
+blowcontrol timer 2h15m
 
-# Monitor status
-blowcontrol state --json
+# Oscillation
+blowcontrol width wide
+blowcontrol direction 180
+blowcontrol stop
+
+# Monitoring
 blowcontrol listen
+blowcontrol state --json
 
 # Automation
+blowcontrol power on --json
 STATUS=$(blowcontrol state --json)
 ```
 
