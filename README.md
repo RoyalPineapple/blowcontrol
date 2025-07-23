@@ -70,6 +70,55 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
    python3 -m dyson2mqtt state --json
    ```
 
+## 🔑 Getting Your Device Credentials
+
+This project relies on **OpenDyson** to extract the necessary MQTT credentials from your Dyson device. OpenDyson is a Go-based client that can decrypt the device credentials needed for MQTT communication.
+
+### Using OpenDyson
+
+1. **Install OpenDyson**:
+   ```bash
+   # Clone the OpenDyson repository
+   git clone https://github.com/openshwprojects/OpenDyson.git
+   cd OpenDyson
+
+   # Build the binary
+   go build -o opendyson cmd/opendyson/main.go
+   ```
+
+2. **Extract your device credentials**:
+   ```bash
+   # List your devices and get credentials
+   ./opendyson devices
+
+   # This will output something like:
+   # Device: 9HC-EU-UDB6777A
+   # Username: 9HC-EU-UDB6777A
+   # Password: [decrypted-password]
+   # Topic Root: 438M
+   ```
+
+3. **Use the credentials in your `.env` file**:
+   ```bash
+   DEVICE_IP=192.168.3.82
+   MQTT_PORT=1883
+   MQTT_PASSWORD=[password-from-opendyson]
+   ROOT_TOPIC=[topic-root-from-opendyson]
+   SERIAL_NUMBER=[serial-number-from-opendyson]
+   ```
+
+### Alternative: Use the Included OpenDyson
+
+This repository includes OpenDyson as a submodule. You can use it directly:
+
+```bash
+# Initialize and update the submodule
+git submodule update --init --recursive
+
+# Use the included OpenDyson binary
+./opendyson/opendyson devices
+```
+
 ## ✨ Features
 
 - **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer, oscillation, direction
