@@ -10,7 +10,4 @@ Classes:
 
 from .device_state import DeviceStateListener, DeviceStatePrinter
 
-__all__ = [
-    "DeviceStatePrinter",
-    "DeviceStateListener"
-]
+__all__ = ["DeviceStatePrinter", "DeviceStateListener"]

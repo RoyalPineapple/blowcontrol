@@ -15,8 +15,4 @@ Functions:
 from .async_client import async_get_state, async_send_command
 from .client import DysonMQTTClient
 
-__all__ = [
-    "DysonMQTTClient",
-    "async_get_state",
-    "async_send_command"
-]
+__all__ = ["DysonMQTTClient", "async_get_state", "async_send_command"]

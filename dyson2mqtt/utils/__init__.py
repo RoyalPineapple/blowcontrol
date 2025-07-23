@@ -32,11 +32,11 @@ def parse_boolean(value) -> bool:
         value_lower = value.lower().strip()
 
         # True values
-        if value_lower in ('true', 't', '1', 'on', 'yes', 'y'):
+        if value_lower in ("true", "t", "1", "on", "yes", "y"):
             return True
 
         # False values
-        if value_lower in ('false', 'f', '0', 'off', 'no', 'n'):
+        if value_lower in ("false", "f", "0", "off", "no", "n"):
             return False
 
     elif isinstance(value, int):
@@ -46,4 +46,5 @@ def parse_boolean(value) -> bool:
             return False
 
     raise ValueError(
-        f"Cannot parse '{value}' as boolean. Supported formats: true/false, t/f, 1/0, on/off, yes/no, y/n")
+        f"Cannot parse '{value}' as boolean. Supported formats: true/false, t/f, 1/0, on/off, yes/no, y/n"
+    )

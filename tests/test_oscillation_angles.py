@@ -22,7 +22,8 @@ class TestOscillationAngles(unittest.TestCase):
         """Set up test fixtures."""
         # Create a mock client that will be used by all oscillation functions
         self.mock_client_patcher = patch(
-            'dyson2mqtt.commands.oscillation.DysonMQTTClient')
+            "dyson2mqtt.commands.oscillation.DysonMQTTClient"
+        )
         self.mock_client_class = self.mock_client_patcher.start()
         self.mock_client = self.mock_client_class.return_value
         self.mock_client.send_standalone_command.return_value = True
@@ -35,11 +36,11 @@ class TestOscillationAngles(unittest.TestCase):
         """Test converting width + heading to lower/upper angles."""
         test_cases = [
             # (width, heading, expected_lower, expected_upper)
-            (90, 180, 135, 225),   # Medium width, center
-            (45, 90, 68, 112),     # Narrow width, right
+            (90, 180, 135, 225),  # Medium width, center
+            (45, 90, 68, 112),  # Narrow width, right
             (180, 270, 175, 355),  # Wide width, back (adjusted for bounds)
-            (350, 0, 5, 355),      # Full width, front (adjusted for bounds)
-            (0, 180, 180, 180),    # Off (no oscillation)
+            (350, 0, 5, 355),  # Full width, front (adjusted for bounds)
+            (0, 180, 180, 180),  # Off (no oscillation)
         ]
 
         for width, heading, expected_lower, expected_upper in test_cases:
@@ -56,12 +57,12 @@ class TestOscillationAngles(unittest.TestCase):
         """Test converting lower/upper angles back to width + heading."""
         test_cases = [
             # (lower, upper, expected_width, expected_heading)
-            (135, 225, 90, 180),   # Medium width, center
+            (135, 225, 90, 180),  # Medium width, center
             # Narrow width, right (note: 44 not 45 due to rounding)
             (68, 112, 44, 90),
             (175, 355, 180, 265),  # Wide width, back (adjusted)
-            (5, 355, 350, 180),    # Full width, front (adjusted)
-            (180, 180, 0, 180),    # Off (no oscillation)
+            (5, 355, 350, 180),  # Full width, front (adjusted)
+            (180, 180, 0, 180),  # Off (no oscillation)
         ]
 
         for lower, upper, expected_width, expected_heading in test_cases:
@@ -75,10 +76,10 @@ class TestOscillationAngles(unittest.TestCase):
         # Test cases that should be adjusted
         test_cases = [
             # (width, heading, expected_adjusted)
-            (90, 0, True),      # 0° heading -> -45° to 45° (invalid)
-            (90, 2, True),      # 2° heading -> -43° to 47° (invalid)
-            (90, 358, True),    # 358° heading -> 313° to 403° (invalid)
-            (180, 0, True),     # 0° heading -> -90° to 90° (invalid)
+            (90, 0, True),  # 0° heading -> -45° to 45° (invalid)
+            (90, 2, True),  # 2° heading -> -43° to 47° (invalid)
+            (90, 358, True),  # 358° heading -> 313° to 403° (invalid)
+            (180, 0, True),  # 0° heading -> -90° to 90° (invalid)
             (350, 180, False),  # 180° heading -> 5° to 355° (valid)
         ]
 
@@ -195,14 +196,16 @@ class TestOscillationAngles(unittest.TestCase):
                 self.assertLessEqual(
                     width_diff,
                     1,
-                    f"Width difference too large: {info['width']} vs {result['actual_width']}")
+                    f"Width difference too large: {info['width']} vs {result['actual_width']}",
+                )
 
                 # Heading should be close (within 1° due to integer division)
                 heading_diff = abs(info["heading"] - result["actual_heading"])
                 self.assertLessEqual(
                     heading_diff,
                     1,
-                    f"Heading difference too large: {info['heading']} vs {result['actual_heading']}")
+                    f"Heading difference too large: {info['heading']} vs {result['actual_heading']}",
+                )
 
     def test_smart_adjustment_logic(self):
         """Test that heading adjustments prefer width preservation."""

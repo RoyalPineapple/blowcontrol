@@ -1,6 +1,7 @@
 """
 Sleep timer command module for Dyson2MQTT app.
 """
+
 import logging
 import re
 from typing import Union
@@ -58,8 +59,7 @@ def parse_sleep_time(value: Union[str, int]) -> int:
     else:
         raise ValueError(f"Invalid type for sleep timer: {type(value)}")
     if not (0 <= minutes <= 540):
-        raise ValueError(
-            "Sleep timer must be between 0 and 540 minutes (0 = off).")
+        raise ValueError("Sleep timer must be between 0 and 540 minutes (0 = off).")
     return minutes
 
 
@@ -75,10 +75,10 @@ def set_sleep_timer(value: Union[str, int]) -> bool:
         client.connect()
 
         if minutes == 0:
-            client.set_numeric_state('sltm', 'OFF')
+            client.set_numeric_state("sltm", "OFF")
         else:
             minutes_str = f"{minutes:04d}"
-            client.set_numeric_state('sltm', minutes_str)
+            client.set_numeric_state("sltm", minutes_str)
 
         client.disconnect()
         return True

@@ -1,6 +1,7 @@
 """
 Night mode command module for Dyson2MQTT app.
 """
+
 import logging
 from typing import Union
 
@@ -27,7 +28,7 @@ def set_night_mode(on: Union[bool, str, int]) -> bool:
 
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
-        client.set_boolean_state('nmod', night_on)
+        client.set_boolean_state("nmod", night_on)
         client.disconnect()
         return True
     except Exception as e:

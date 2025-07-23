@@ -1,6 +1,7 @@
 """
 Oscillation command module for Dyson2MQTT app.
 """
+
 import logging
 from typing import Union
 
@@ -23,7 +24,8 @@ def parse_int_input(value) -> int:
 
 
 def set_oscillation_angles(
-        width: Union[int, str], heading: Union[int, str] = 180) -> dict:
+    width: Union[int, str], heading: Union[int, str] = 180
+) -> dict:
     """
     Set oscillation angles (width and heading) for the Dyson device.
 
@@ -51,7 +53,7 @@ def set_oscillation_angles(
             "lower_angle": None,
             "upper_angle": None,
             "adjusted": False,
-            "original_heading": None
+            "original_heading": None,
         }
 
     # Validate inputs
@@ -60,15 +62,14 @@ def set_oscillation_angles(
         if not (0 <= heading_int <= 359):
             raise ValueError("Heading must be between 0° and 359°")
 
-        logger.info(
-            f"Setting heading to {heading_int}° with no oscillation (width=0)")
+        logger.info(f"Setting heading to {heading_int}° with no oscillation (width=0)")
 
         # Try using STATE-SET with angles but keep oscillation off
         command_data = {
             "osal": f"{heading_int:04d}",
             "osau": f"{heading_int:04d}",
             "oscs": "OFF",
-            "oson": "OFF"
+            "oson": "OFF",
         }
 
         try:
@@ -84,7 +85,8 @@ def set_oscillation_angles(
                     "upper_angle": heading_int,
                     "adjusted": False,
                     "original_heading": None,
-                    "message": f"Set heading to {heading_int}° (no oscillation)"}
+                    "message": f"Set heading to {heading_int}° (no oscillation)",
+                }
             else:
                 return {
                     "success": False,
@@ -94,7 +96,7 @@ def set_oscillation_angles(
                     "lower_angle": None,
                     "upper_angle": None,
                     "adjusted": False,
-                    "original_heading": None
+                    "original_heading": None,
                 }
         except Exception as e:
             return {
@@ -105,13 +107,12 @@ def set_oscillation_angles(
                 "lower_angle": None,
                 "upper_angle": None,
                 "adjusted": False,
-                "original_heading": None
+                "original_heading": None,
             }
 
     # Normal oscillation case (width >= 45)
     if not (45 <= width_int <= 350):
-        raise ValueError(
-            "Width must be between 45° and 350° (or 0 for no oscillation)")
+        raise ValueError("Width must be between 45° and 350° (or 0 for no oscillation)")
     if not (0 <= heading_int <= 359):
         raise ValueError("Heading must be between 0° and 359°")
 
@@ -139,7 +140,8 @@ def set_oscillation_angles(
         # First, check if the width itself is too large for any valid position
         if width_int > 350:  # 355 - 5 = 350° maximum possible width
             raise ValueError(
-                f"Width {width_int}° is too large. Maximum width is 350° (5° to 355°).")
+                f"Width {width_int}° is too large. Maximum width is 350° (5° to 355°)."
+            )
 
         # Find the best heading that keeps the full width within 5°-355°
         # Strategy: try the closest valid positions to the original heading
@@ -174,11 +176,13 @@ def set_oscillation_angles(
 
         if not valid_options:
             raise ValueError(
-                f"Width {width_int}° cannot fit within Dyson's bounds (5°-355°) from any heading. Try a smaller width.")
+                f"Width {width_int}° cannot fit within Dyson's bounds (5°-355°) from any heading. Try a smaller width."
+            )
 
         # Choose the closest valid option
         best_heading, best_distance, adjustment_type = min(
-            valid_options, key=lambda x: x[1])
+            valid_options, key=lambda x: x[1]
+        )
 
         # Recalculate with the adjusted heading
         heading_int = best_heading
@@ -186,26 +190,31 @@ def set_oscillation_angles(
         upper_angle = (heading_int + half_width) % 360
 
         logger.warning(
-            f"Adjusted heading from {original_heading}° to {heading_int}° to fit width {width_int}° within bounds (adjusted {adjustment_type})")
+            f"Adjusted heading from {original_heading}° to {heading_int}° to fit width {width_int}° within bounds (adjusted {adjustment_type})"
+        )
 
     # Final validation - this should always pass now
     if lower_angle > upper_angle or lower_angle < 5 or upper_angle > 355:
         raise ValueError(
-            f"Internal error: failed to find valid heading for width {width_int}°")
+            f"Internal error: failed to find valid heading for width {width_int}°"
+        )
 
     # Handle wrap-around case (e.g., 350° to 10°) - only allowed if within
     # bounds
     if lower_angle > upper_angle:
         logger.warning(
-            f"Wrap-around oscillation: {lower_angle}° to {upper_angle}° (width={width_int}°, heading={heading_int}°)")
+            f"Wrap-around oscillation: {lower_angle}° to {upper_angle}° (width={width_int}°, heading={heading_int}°)"
+        )
 
     logger.info(
-        f"Setting oscillation: width={width_int}°, heading={heading_int}° -> angles {lower_angle}°-{upper_angle}°")
+        f"Setting oscillation: width={width_int}°, heading={heading_int}° -> angles {lower_angle}°-{upper_angle}°"
+    )
 
     # Debug output
     if original_heading != heading_int:
         logger.info(
-            f"Heading was adjusted from {original_heading}° to {heading_int}° (lower: {lower_angle}°, upper: {upper_angle}°)")
+            f"Heading was adjusted from {original_heading}° to {heading_int}° (lower: {lower_angle}°, upper: {upper_angle}°)"
+        )
 
     # Format as 4-digit strings with leading zeros
     osal = f"{lower_angle:04d}"
@@ -213,11 +222,11 @@ def set_oscillation_angles(
 
     # Create the STATE-SET command
     command_data = {
-        "oscs": "ON",    # Enable oscillation
-        "oson": "ON",    # Turn on oscillation
-        "osal": osal,    # Lower angle
-        "osau": osau,    # Upper angle
-        "ancp": "CUST"   # Custom angle mode
+        "oscs": "ON",  # Enable oscillation
+        "oson": "ON",  # Turn on oscillation
+        "osal": osal,  # Lower angle
+        "osau": osau,  # Upper angle
+        "ancp": "CUST",  # Custom angle mode
     }
 
     try:
@@ -225,7 +234,8 @@ def set_oscillation_angles(
         success = client.send_standalone_command("STATE-SET", command_data)
         if success:
             logger.info(
-                f"✅ Oscillation set: {lower_angle}°-{upper_angle}° (width={width_int}°, heading={heading_int}°)")
+                f"✅ Oscillation set: {lower_angle}°-{upper_angle}° (width={width_int}°, heading={heading_int}°)"
+            )
         else:
             logger.error("❌ Failed to send oscillation command")
 
@@ -236,7 +246,7 @@ def set_oscillation_angles(
             "lower_angle": lower_angle,
             "upper_angle": upper_angle,
             "adjusted": original_heading != heading_int,
-            "original_heading": original_heading
+            "original_heading": original_heading,
         }
     except Exception as e:
         logger.error(f"❌ Error setting oscillation: {e}")
@@ -248,15 +258,15 @@ def set_oscillation_angles(
             "lower_angle": None,
             "upper_angle": None,
             "adjusted": False,
-            "original_heading": original_heading
+            "original_heading": original_heading,
         }
 
 
 def stop_oscillation() -> bool:
     """Stop oscillation (keep current position)."""
     command_data = {
-        "oscs": "OFF",   # Disable oscillation
-        "oson": "OFF"    # Turn off oscillation
+        "oscs": "OFF",  # Disable oscillation
+        "oson": "OFF",  # Turn off oscillation
     }
 
     try:
@@ -301,7 +311,7 @@ def get_oscillation_info(osal: str, osau: str) -> dict:
         "heading": heading,
         "lower_angle": lower,
         "upper_angle": upper,
-        "is_wrap_around": lower > upper
+        "is_wrap_around": lower > upper,
     }
 
 
@@ -309,13 +319,7 @@ def get_oscillation_info(osal: str, osau: str) -> dict:
 VALID_WIDTHS = [0, 45, 90, 180, 350]
 
 # Named width steps matching Dyson's terminology
-WIDTH_NAMES = {
-    "off": 0,
-    "narrow": 45,
-    "medium": 90,
-    "wide": 180,
-    "full": 350
-}
+WIDTH_NAMES = {"off": 0, "narrow": 45, "medium": 90, "wide": 180, "full": 350}
 
 # Reverse mapping for display
 WIDTH_DISPLAY_NAMES = {v: k for k, v in WIDTH_NAMES.items()}
@@ -345,12 +349,12 @@ def parse_width_input(width_input) -> int:
             except ValueError:
                 available_names = ", ".join(WIDTH_NAMES.keys())
                 raise ValueError(
-                    f"Invalid width name '{width_input}'. Valid names: {available_names}")
+                    f"Invalid width name '{width_input}'. Valid names: {available_names}"
+                )
     elif isinstance(width_input, int):
         return width_input
     else:
-        raise ValueError(
-            f"Width must be an integer or string, got {type(width_input)}")
+        raise ValueError(f"Width must be an integer or string, got {type(width_input)}")
 
 
 def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
@@ -388,7 +392,7 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
             "original_heading": None,
             "width_adjusted": False,
             "requested_width": width_input,
-            "adjusted_width": None
+            "adjusted_width": None,
         }
 
     # Validate and adjust width to match Dyson's steps
@@ -407,7 +411,8 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
 
         width_name = WIDTH_DISPLAY_NAMES.get(valid_width, f"{valid_width}°")
         logger.warning(
-            f"Width {width}° is not a valid Dyson step. Using {valid_width}° ({width_name}) instead. Valid: off, narrow, medium, wide, full")
+            f"Width {width}° is not a valid Dyson step. Using {valid_width}° ({width_name}) instead. Valid: off, narrow, medium, wide, full"
+        )
         width = valid_width
 
     # Handle special case: width 0 means turn off oscillation
@@ -448,12 +453,12 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
                         # Wrap-around case
                         current_heading = ((osal + osau + 360) // 2) % 360
                     logger.info(
-                        f"Estimated current position from oscillation range: {current_heading}° (range: {osal}°-{osau}°)")
+                        f"Estimated current position from oscillation range: {current_heading}° (range: {osal}°-{osau}°)"
+                    )
                 elif "apos" in product_state:
                     # Direct position if available
                     current_heading = int(product_state["apos"])
-                    logger.info(
-                        f"Current fan position from state: {current_heading}°")
+                    logger.info(f"Current fan position from state: {current_heading}°")
 
             # Fallback to direct state fields if product-state not found
             if current_heading is None:
@@ -467,19 +472,20 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
                         # Wrap-around case
                         current_heading = ((osal + osau + 360) // 2) % 360
                     logger.info(
-                        f"Estimated current position from oscillation range: {current_heading}° (range: {osal}°-{osau}°)")
+                        f"Estimated current position from oscillation range: {current_heading}° (range: {osal}°-{osau}°)"
+                    )
                 elif "apos" in state:
                     # Direct position if available
                     current_heading = int(state["apos"])
-                    logger.info(
-                        f"Current fan position from state: {current_heading}°")
+                    logger.info(f"Current fan position from state: {current_heading}°")
 
             if current_heading is None:
                 logger.warning("No position information found in device state")
                 logger.debug(f"Available state keys: {list(state.keys())}")
                 if product_state:
                     logger.debug(
-                        f"Available product-state keys: {list(product_state.keys())}")
+                        f"Available product-state keys: {list(product_state.keys())}"
+                    )
 
     except Exception as e:
         logger.warning(f"Could not get current position from state: {e}")
@@ -488,12 +494,14 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
     if current_heading is None:
         current_heading = fallback_heading
         logger.warning(
-            f"Using fallback heading {fallback_heading}° (could not determine current position)")
+            f"Using fallback heading {fallback_heading}° (could not determine current position)"
+        )
 
     # Use current or fallback position as heading and set the oscillation
     width_name = WIDTH_DISPLAY_NAMES.get(width, f"{width}°")
     logger.info(
-        f"Setting {width}° ({width_name}) width centered on position {current_heading}°")
+        f"Setting {width}° ({width_name}) width centered on position {current_heading}°"
+    )
     result = set_oscillation_angles(width, current_heading)
 
     # Add info about width adjustment if it occurred
@@ -522,7 +530,7 @@ def stop_oscillation_dict() -> dict:
         "original_heading": None,
         "width_adjusted": False,
         "requested_width": 0,
-        "adjusted_width": 0
+        "adjusted_width": 0,
     }
 
 
@@ -563,7 +571,7 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                 "original_heading": None,
                 "width_preserved": False,
                 "current_width": None,
-                "oscillation_was_off": False
+                "oscillation_was_off": False,
             }
     except ValueError as e:
         return {
@@ -577,15 +585,14 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
             "original_heading": None,
             "width_preserved": False,
             "current_width": None,
-            "oscillation_was_off": False
+            "oscillation_was_off": False,
         }
 
     # Get current oscillation state from device
     current_width = None
     oscillation_is_on = False
     try:
-        logger.info(
-            "Getting current device state to determine oscillation status...")
+        logger.info("Getting current device state to determine oscillation status...")
 
         # Run the async state function
         async def get_state():
@@ -617,20 +624,26 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                             current_width = (360 - osal) + osau
 
                         logger.info(
-                            f"Current oscillation: {osal}°-{osau}° (width: {current_width}°)")
+                            f"Current oscillation: {osal}°-{osau}° (width: {current_width}°)"
+                        )
                     else:
-                        logger.warning(
-                            "Oscillation is on but no angle data found")
+                        logger.warning("Oscillation is on but no angle data found")
                 else:
                     logger.info(
-                        "Oscillation is currently off - will just set heading without turning oscillation on")
+                        "Oscillation is currently off - will just set heading without turning oscillation on"
+                    )
 
             # Fallback to direct state fields if product-state not found
             if current_width is None and oscillation_is_on:
                 oscs = state.get("oscs", "OFF")
                 oson = state.get("oson", "OFF")
 
-                if oscs == "ON" and oson == "ON" and "osal" in state and "osau" in state:
+                if (
+                    oscs == "ON"
+                    and oson == "ON"
+                    and "osal" in state
+                    and "osau" in state
+                ):
                     osal = int(state["osal"])
                     osau = int(state["osau"])
 
@@ -640,7 +653,8 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                         current_width = (360 - osal) + osau
 
                     logger.info(
-                        f"Current oscillation: {osal}°-{osau}° (width: {current_width}°)")
+                        f"Current oscillation: {osal}°-{osau}° (width: {current_width}°)"
+                    )
 
     except Exception as e:
         logger.warning(f"Could not get current oscillation state: {e}")
@@ -649,7 +663,8 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
     # turning oscillation on
     if not oscillation_is_on:
         logger.info(
-            f"Oscillation is off - setting heading to {heading_int}° using sweep pattern")
+            f"Oscillation is off - setting heading to {heading_int}° using sweep pattern"
+        )
 
         # Use the pattern from sweep.txt: set both angles to heading with oson=ON
         # But also explicitly set oscs=OFF to keep oscillation off
@@ -658,7 +673,7 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
             "osau": f"{heading_int:04d}",
             "oson": "ON",
             "oscs": "OFF",
-            "ancp": "CUST"
+            "ancp": "CUST",
         }
 
         try:
@@ -667,7 +682,8 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
 
             if success:
                 logger.info(
-                    f"✅ Set heading to {heading_int}° (oscillation remains off)")
+                    f"✅ Set heading to {heading_int}° (oscillation remains off)"
+                )
                 return {
                     "success": True,
                     "actual_width": 0,
@@ -679,7 +695,8 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                     "width_preserved": False,
                     "current_width": 0,
                     "oscillation_was_off": True,
-                    "message": f"Set heading to {heading_int}° (oscillation remains off)"}
+                    "message": f"Set heading to {heading_int}° (oscillation remains off)",
+                }
             else:
                 return {
                     "success": False,
@@ -692,7 +709,7 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                     "original_heading": None,
                     "width_preserved": False,
                     "current_width": None,
-                    "oscillation_was_off": True
+                    "oscillation_was_off": True,
                 }
         except Exception as e:
             return {
@@ -706,14 +723,15 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
                 "original_heading": None,
                 "width_preserved": False,
                 "current_width": None,
-                "oscillation_was_off": True
+                "oscillation_was_off": True,
             }
 
     # Oscillation is on - preserve current width and set new heading
     if current_width is None:
         current_width = 90  # Default to medium width
         logger.warning(
-            f"Using default width {current_width}° (could not determine current width)")
+            f"Using default width {current_width}° (could not determine current width)"
+        )
         width_preserved = False
     else:
         width_preserved = True
@@ -723,13 +741,15 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
         # Find the closest valid width
         closest_width = min(VALID_WIDTHS, key=lambda x: abs(x - current_width))
         logger.warning(
-            f"Current width {current_width}° is not a valid step, using closest: {closest_width}°")
+            f"Current width {current_width}° is not a valid step, using closest: {closest_width}°"
+        )
         current_width = closest_width
 
     # Set oscillation with preserved width and new heading
     width_name = WIDTH_DISPLAY_NAMES.get(current_width, f"{current_width}°")
     logger.info(
-        f"Setting heading to {heading_int}° while preserving {current_width}° ({width_name}) width")
+        f"Setting heading to {heading_int}° while preserving {current_width}° ({width_name}) width"
+    )
 
     result = set_oscillation_angles(current_width, heading_int)
 

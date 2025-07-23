@@ -1,6 +1,7 @@
 """
 Fan speed command module for Dyson2MQTT app.
 """
+
 import logging
 from typing import Any, Union
 
@@ -51,7 +52,7 @@ def set_fan_speed(speed: Union[int, str]) -> bool:
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
         speed_str = f"{validated_speed:04d}"
-        client.set_numeric_state('fnsp', speed_str)
+        client.set_numeric_state("fnsp", speed_str)
         client.disconnect()
         return True
     except Exception as e:

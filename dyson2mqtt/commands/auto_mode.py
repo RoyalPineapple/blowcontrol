@@ -1,6 +1,7 @@
 """
 Auto mode command module for Dyson2MQTT app.
 """
+
 import logging
 from typing import Union
 
@@ -27,7 +28,7 @@ def set_auto_mode(on: Union[bool, str, int]) -> bool:
 
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
-        client.set_boolean_state('auto', auto_on)
+        client.set_boolean_state("auto", auto_on)
         client.disconnect()
         return True
     except Exception as e:

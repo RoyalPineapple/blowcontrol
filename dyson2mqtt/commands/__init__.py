@@ -34,5 +34,5 @@ __all__ = [
     "set_oscillation_angles",
     "stop_oscillation",
     "set_oscillation_width",
-    "set_oscillation_direction"
+    "set_oscillation_direction",
 ]

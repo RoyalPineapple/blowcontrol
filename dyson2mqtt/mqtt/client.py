@@ -13,7 +13,12 @@ from typing import Callable, Optional
 
 import paho.mqtt.client as mqtt
 
-from dyson2mqtt.config import DEVICE_IP, MQTT_PASSWORD, MQTT_PORT, SERIAL_NUMBER
+from dyson2mqtt.config import (
+    DEVICE_IP,
+    MQTT_PASSWORD,
+    MQTT_PORT,
+    SERIAL_NUMBER,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +29,14 @@ class DysonMQTTClient:
     Uses SERIAL_NUMBER as the MQTT username.
     """
 
-    def __init__(self,
-                 device_ip: Optional[str] = DEVICE_IP,
-                 port: int = MQTT_PORT,
-                 serial_number: Optional[str] = SERIAL_NUMBER,
-                 password: Optional[str] = MQTT_PASSWORD,
-                 client_id: Optional[str] = None):
+    def __init__(
+        self,
+        device_ip: Optional[str] = DEVICE_IP,
+        port: int = MQTT_PORT,
+        serial_number: Optional[str] = SERIAL_NUMBER,
+        password: Optional[str] = MQTT_PASSWORD,
+        client_id: Optional[str] = None,
+    ):
         if not device_ip:
             raise ValueError("DEVICE_IP is required but not set.")
         self.device_ip = device_ip
@@ -49,8 +56,7 @@ class DysonMQTTClient:
 
     def connect(self, keepalive: int = 60) -> None:
         """Connect to the MQTT broker."""
-        logger.info(
-            f"Connecting to MQTT broker at {self.device_ip}:{self.port}...")
+        logger.info(f"Connecting to MQTT broker at {self.device_ip}:{self.port}...")
         self._client.connect(self.device_ip, self.port, keepalive)
         self._client.loop_start()
 
@@ -62,11 +68,8 @@ class DysonMQTTClient:
         self._connected = False
 
     def publish(
-            self,
-            topic: str,
-            payload: str,
-            qos: int = 0,
-            retain: bool = False) -> None:
+        self, topic: str, payload: str, qos: int = 0, retain: bool = False
+    ) -> None:
         """Publish a message to a topic."""
         if not topic:
             raise ValueError("Topic is required for publish().")
@@ -91,12 +94,13 @@ class DysonMQTTClient:
         :param callback: Optional custom callback. If None, print topic and payload.
         """
         import signal
+
         if isinstance(topics, str):
             topics = [topics]
 
         def default_callback(client, userdata, msg):
-            print(
-                f"[MQTT] {msg.topic}: {msg.payload.decode(errors='replace')}")
+            print(f"[MQTT] {msg.topic}: {msg.payload.decode(errors='replace')}")
+
         cb = callback or default_callback
         self._subscribed_topics = topics
         self._user_callback = cb
@@ -110,10 +114,8 @@ class DysonMQTTClient:
             self.disconnect()
 
     def set_boolean_state(
-            self,
-            key: str,
-            value: bool,
-            topic: Optional[str] = None) -> None:
+        self, key: str, value: bool, topic: Optional[str] = None
+    ) -> None:
         """
         Set a boolean state (ON/OFF) for the Dyson device.
         :param key: The data key to set (e.g., 'fpwr', 'auto', 'nmod', 'oson')
@@ -121,6 +123,7 @@ class DysonMQTTClient:
         :param topic: Optional override for the MQTT topic
         """
         from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+
         if not topic:
             if not ROOT_TOPIC:
                 raise ValueError("ROOT_TOPIC is required but not set.")
@@ -133,17 +136,16 @@ class DysonMQTTClient:
             "msg": "STATE-SET",
             "mode-reason": "RAPP",
             "time": now,
-            "data": {key: str_value}
+            "data": {key: str_value},
         }
         import json
+
         logger.info(f"Setting {key} to {str_value} on topic {topic}")
         self.publish(topic, json.dumps(payload))
 
     def set_numeric_state(
-            self,
-            key: str,
-            value: str,
-            topic: Optional[str] = None) -> None:
+        self, key: str, value: str, topic: Optional[str] = None
+    ) -> None:
         """
         Set a numeric or string state (e.g., fan speed) for the Dyson device.
         :param key: The data key to set (e.g., 'fnsp')
@@ -151,6 +153,7 @@ class DysonMQTTClient:
         :param topic: Optional override for the MQTT topic
         """
         from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+
         if not topic:
             if not ROOT_TOPIC:
                 raise ValueError("ROOT_TOPIC is required but not set.")
@@ -158,22 +161,25 @@ class DysonMQTTClient:
                 raise ValueError("SERIAL_NUMBER is required but not set.")
             topic = f"{ROOT_TOPIC}/{SERIAL_NUMBER}/command"
         import datetime
+
         now = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
         payload = {
             "msg": "STATE-SET",
             "mode-reason": "RAPP",
             "time": now,
-            "data": {key: value}
+            "data": {key: value},
         }
         import json
+
         logger.info(f"Setting {key} to {value} on topic {topic}")
         self.publish(topic, json.dumps(payload))
 
     def send_command(
-            self,
-            msg_type: str,
-            data: Optional[dict] = None,
-            topic: Optional[str] = None) -> bool:
+        self,
+        msg_type: str,
+        data: Optional[dict] = None,
+        topic: Optional[str] = None,
+    ) -> bool:
         """
         Send a command to the Dyson device (assumes connection is already established).
         :param msg_type: The message type (e.g., 'REQUEST-CURRENT-STATE', 'STATE-SET')
@@ -185,16 +191,13 @@ class DysonMQTTClient:
         import json
 
         from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+
         if not topic:
             if not ROOT_TOPIC or not SERIAL_NUMBER:
                 raise ValueError("ROOT_TOPIC and SERIAL_NUMBER must be set.")
             topic = f"{ROOT_TOPIC}/{SERIAL_NUMBER}/command"
         now = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-        payload = {
-            "msg": msg_type,
-            "mode-reason": "RAPP",
-            "time": now
-        }
+        payload = {"msg": msg_type, "mode-reason": "RAPP", "time": now}
         if data:
             payload["data"] = data
 
@@ -210,10 +213,11 @@ class DysonMQTTClient:
             return False
 
     def send_standalone_command(
-            self,
-            msg_type: str,
-            data: Optional[dict] = None,
-            topic: Optional[str] = None) -> bool:
+        self,
+        msg_type: str,
+        data: Optional[dict] = None,
+        topic: Optional[str] = None,
+    ) -> bool:
         """
         Send a standalone command to the Dyson device (handles its own connection).
         :param msg_type: The message type (e.g., 'REQUEST-CURRENT-STATE', 'STATE-SET')
@@ -243,8 +247,7 @@ class DysonMQTTClient:
             if self._user_callback:
                 self._client.on_message = self._user_callback
         else:
-            logger.error(
-                f"Failed to connect to MQTT broker. Return code: {rc}")
+            logger.error(f"Failed to connect to MQTT broker. Return code: {rc}")
 
     def _on_disconnect(self, client, userdata, rc):
         logger.info("Disconnected from MQTT broker.")
@@ -253,9 +256,7 @@ class DysonMQTTClient:
     def _generate_client_id(self) -> str:
         """Generate a unique client ID for MQTT connections."""
         # Generate a random string for uniqueness
-        random_suffix = ''.join(
-            random.choices(
-                string.ascii_lowercase +
-                string.digits,
-                k=8))
+        random_suffix = "".join(
+            random.choices(string.ascii_lowercase + string.digits, k=8)
+        )
         return f"dyson2mqtt-{random_suffix}"

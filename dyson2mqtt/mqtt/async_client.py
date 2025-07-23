@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 async def async_get_state(
-        timeout: float = 60, quiet: bool = False) -> Optional[Dict[str, Any]]:
+    timeout: float = 60, quiet: bool = False
+) -> Optional[Dict[str, Any]]:
     """
     Async function to get current device state using existing sync client.
     Uses asyncio.to_thread to run sync code in a thread pool.
@@ -29,7 +30,7 @@ async def async_get_state(
         """Sync function to get state - runs in thread pool."""
         topics = [
             f"{ROOT_TOPIC}/{SERIAL_NUMBER}/status/current",
-            f"{ROOT_TOPIC}/{SERIAL_NUMBER}/status/fault"
+            f"{ROOT_TOPIC}/{SERIAL_NUMBER}/status/fault",
         ]
 
         client = DysonMQTTClient(client_id="d2mqtt-async-getstate")
@@ -38,7 +39,7 @@ async def async_get_state(
 
         def state_callback(client_, userdata, msg):
             try:
-                data = json.loads(msg.payload.decode(errors='replace'))
+                data = json.loads(msg.payload.decode(errors="replace"))
                 msg_type = data.get("msg")
 
                 if msg_type == "CURRENT-STATE":
@@ -68,7 +69,8 @@ async def async_get_state(
             else:
                 # Suppress INFO logs when in quiet mode
                 import logging
-                logging.getLogger('app.mqtt.client').setLevel(logging.WARNING)
+
+                logging.getLogger("app.mqtt.client").setLevel(logging.WARNING)
 
             client._subscribed_topics = topics
             client._user_callback = state_callback
@@ -80,6 +82,7 @@ async def async_get_state(
                 print("[ASYNC] Waiting for connection...")
             # Give time for connection and subscription to complete
             import time
+
             time.sleep(2)
 
             if not quiet:
@@ -113,6 +116,7 @@ async def async_send_command(command: str) -> bool:
     """
     Async function to send a command using existing sync client.
     """
+
     def sync_send_command():
         """Sync function to send command - runs in thread pool."""
         try:
@@ -131,11 +135,12 @@ async def async_send_command(command: str) -> bool:
 
 async def async_set_power(on: bool) -> bool:
     """Async function to set power state."""
+
     def sync_set_power():
         try:
             client = DysonMQTTClient(client_id="d2mqtt-async-cmd")
             client.connect()
-            client.set_boolean_state('fpwr', on)
+            client.set_boolean_state("fpwr", on)
             client.disconnect()
             return True
         except Exception as e:
@@ -147,19 +152,20 @@ async def async_set_power(on: bool) -> bool:
 
 async def async_set_fan_speed(speed: int) -> bool:
     """Async function to set fan speed."""
+
     def sync_set_fan_speed():
         try:
             if speed == 0:
                 # Power off
                 client = DysonMQTTClient(client_id="d2mqtt-async-cmd")
                 client.connect()
-                client.set_boolean_state('fpwr', False)
+                client.set_boolean_state("fpwr", False)
                 client.disconnect()
             else:
                 client = DysonMQTTClient(client_id="d2mqtt-async-cmd")
                 client.connect()
                 speed_str = f"{speed:04d}"
-                client.set_numeric_state('fnsp', speed_str)
+                client.set_numeric_state("fnsp", speed_str)
                 client.disconnect()
             return True
         except Exception as e:
