@@ -1,8 +1,5 @@
-# BlowControl Modular App
 
-## Overview
-
-A modular, professional-quality command-line app for controlling Dyson fans over MQTT. Supports device control, state monitoring, and both synchronous and asynchronous operations with machine-readable JSON output.
+**BlowControl** is a command-line app for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
 
 ---
 
