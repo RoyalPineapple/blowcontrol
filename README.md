@@ -78,27 +78,32 @@ This project relies on **OpenDyson** to extract the necessary MQTT credentials f
 
 1. **Install OpenDyson**:
    ```bash
-   # Clone the OpenDyson repository
-   git clone https://github.com/openshwprojects/OpenDyson.git
-   cd OpenDyson
+   # Option 1: Using go install (recommended)
+   go install github.com/libdyson-wg/opendyson
 
-   # Build the binary
-   go build -o opendyson cmd/opendyson/main.go
+   # Option 2: Download from releases
+   # Visit: https://github.com/libdyson-wg/opendyson/releases
+   # Download the executable for your OS and make it executable
    ```
 
-2. **Extract your device credentials**:
+2. **Login to your MyDyson account**:
+   ```bash
+   # First time setup - login to your MyDyson account
+   opendyson login
+   ```
+
+3. **Extract your device credentials**:
    ```bash
    # List your devices and get credentials
-   ./opendyson devices
+   opendyson devices
 
-   # This will output something like:
-   # Device: 9HC-EU-UDB6777A
-   # Username: 9HC-EU-UDB6777A
-   # Password: [decrypted-password]
-   # Topic Root: 438M
+   # This will output device information including:
+   # - Device serial numbers
+   # - IP addresses (if found on local network)
+   # - MQTT credentials (username, password, topic root)
    ```
 
-3. **Use the credentials in your `.env` file**:
+4. **Use the credentials in your `.env` file**:
    ```bash
    DEVICE_IP=192.168.3.82
    MQTT_PORT=1883
@@ -107,17 +112,22 @@ This project relies on **OpenDyson** to extract the necessary MQTT credentials f
    SERIAL_NUMBER=[serial-number-from-opendyson]
    ```
 
-### Alternative: Use the Included OpenDyson
-
-This repository includes OpenDyson as a submodule. You can use it directly:
+### Additional OpenDyson Commands
 
 ```bash
-# Initialize and update the submodule
-git submodule update --init --recursive
+# Listen to MQTT messages from your device
+opendyson listen [SERIAL_NUMBER]
 
-# Use the included OpenDyson binary
-./opendyson/opendyson devices
+# Listen via cloud IoT service (if device not on local network)
+opendyson listen [SERIAL_NUMBER] --iot
+
+# Get help
+opendyson help
 ```
+
+### Security Note
+
+⚠️ **Important**: The output from `opendyson devices` contains sensitive IoT credentials that allow remote control of your devices. **Never share this information** with anyone you don't trust completely.
 
 ## ✨ Features
 
