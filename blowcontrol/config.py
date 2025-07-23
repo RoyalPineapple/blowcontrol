@@ -1,5 +1,5 @@
 """
-Configuration management for Dyson2MQTT.
+Configuration management for BlowControl.
 Loads settings from environment variables and .env file.
 """
 

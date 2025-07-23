@@ -1,5 +1,5 @@
 """
-Pytest configuration and fixtures for Dyson2MQTT test suite.
+Pytest configuration and fixtures for BlowControl test suite.
 """
 
 import json

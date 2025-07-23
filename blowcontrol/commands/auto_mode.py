@@ -1,19 +1,19 @@
 """
-Night mode command module for Dyson2MQTT app.
+Auto mode command module for Dyson2MQTT app.
 """
 
 import logging
 from typing import Union
 
-from dyson2mqtt.mqtt.client import DysonMQTTClient
-from dyson2mqtt.utils import parse_boolean
+from blowcontrol.mqtt.client import DysonMQTTClient
+from blowcontrol.utils import parse_boolean
 
 logger = logging.getLogger(__name__)
 
 
-def set_night_mode(on: Union[bool, str, int]) -> bool:
+def set_auto_mode(on: Union[bool, str, int]) -> bool:
     """
-    Set the Dyson device night mode ON or OFF via MQTT.
+    Set the Dyson device auto mode ON or OFF via MQTT.
 
     Args:
         on: Boolean value or string representation. Supports:
@@ -24,13 +24,13 @@ def set_night_mode(on: Union[bool, str, int]) -> bool:
     """
     try:
         # Parse flexible boolean input
-        night_on = parse_boolean(on)
+        auto_on = parse_boolean(on)
 
         client = DysonMQTTClient(client_id="d2mqtt-cmd")
         client.connect()
-        client.set_boolean_state("nmod", night_on)
+        client.set_boolean_state("auto", auto_on)
         client.disconnect()
         return True
     except Exception as e:
-        logger.error(f"Failed to set night mode: {e}")
+        logger.error(f"Failed to set auto mode: {e}")
         return False

@@ -1,4 +1,4 @@
-# Dyson2MQTT Modular App Game Plan
+# BlowControl Modular App Game Plan
 
 > **Note to agents:**
 > Please check off each item as you complete it. Update this file regularly to reflect progress and any changes to the plan.
@@ -149,4 +149,4 @@
 - **Professional CLI** with comprehensive help and error handling
 - **Modular architecture** makes extending the system straightforward
 
-The app is production-ready for controlling Dyson devices via MQTT with both interactive and programmatic interfaces.
+The app is production-ready for controlling BlowControl devices via MQTT with both interactive and programmatic interfaces.

@@ -5,8 +5,8 @@ Power command module for Dyson2MQTT app.
 import logging
 from typing import Union
 
-from dyson2mqtt.mqtt.client import DysonMQTTClient
-from dyson2mqtt.utils import parse_boolean
+from blowcontrol.mqtt.client import DysonMQTTClient
+from blowcontrol.utils import parse_boolean
 
 logger = logging.getLogger(__name__)
 

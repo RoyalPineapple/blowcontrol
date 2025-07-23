@@ -1,5 +1,5 @@
 """
-Device State Management
+BlowControl state management
 
 Classes and utilities for managing, monitoring, and displaying Dyson device state.
 

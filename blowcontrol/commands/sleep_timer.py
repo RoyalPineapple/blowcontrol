@@ -6,7 +6,7 @@ import logging
 import re
 from typing import Union
 
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+from blowcontrol.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
 

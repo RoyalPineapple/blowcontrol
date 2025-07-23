@@ -55,8 +55,8 @@ def main():
             "find . -name '*.py' -exec sed -i '' '$a\\' {} \\;",
             "Ensure files end with newline",
         ),
-        ("black dyson2mqtt/ tests/ --line-length=88", "Format code with Black"),
-        ("isort dyson2mqtt/ tests/ --profile=black", "Sort imports with isort"),
+        ("black blowcontrol/ tests/ --line-length=88", "Format code with Black"),
+        ("isort blowcontrol/ tests/ --profile=black", "Sort imports with isort"),
     ]
 
     success = True

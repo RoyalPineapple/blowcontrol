@@ -5,8 +5,8 @@ Fan speed command module for Dyson2MQTT app.
 import logging
 from typing import Any, Union
 
-from dyson2mqtt.commands.power import set_power
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+from blowcontrol.commands.power import set_power
+from blowcontrol.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
 

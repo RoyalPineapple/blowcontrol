@@ -1,5 +1,5 @@
 """
-Device Command Modules
+BlowControl command modules
 
 Individual command implementations for controlling Dyson device features.
 

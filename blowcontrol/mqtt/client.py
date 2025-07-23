@@ -13,14 +13,14 @@ from typing import Any, Callable, Optional, Union
 
 import paho.mqtt.client as mqtt
 
-from dyson2mqtt.config import DEVICE_IP, MQTT_PASSWORD, MQTT_PORT, SERIAL_NUMBER
+from blowcontrol.config import DEVICE_IP, MQTT_PASSWORD, MQTT_PORT, SERIAL_NUMBER
 
 logger = logging.getLogger(__name__)
 
 
 class DysonMQTTClient:
     """
-    Reusable MQTT client for Dyson2MQTT app.
+    Reusable MQTT client for BlowControl app.
     Uses SERIAL_NUMBER as the MQTT username.
     """
 
@@ -119,7 +119,7 @@ class DysonMQTTClient:
         :param value: True for ON, False for OFF
         :param topic: Optional override for the MQTT topic
         """
-        from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+        from blowcontrol.config import ROOT_TOPIC, SERIAL_NUMBER
 
         if not topic:
             if not ROOT_TOPIC:
@@ -149,7 +149,7 @@ class DysonMQTTClient:
         :param value: The value to set (e.g., '0005')
         :param topic: Optional override for the MQTT topic
         """
-        from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+        from blowcontrol.config import ROOT_TOPIC, SERIAL_NUMBER
 
         if not topic:
             if not ROOT_TOPIC:
@@ -187,7 +187,7 @@ class DysonMQTTClient:
         import datetime
         import json
 
-        from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
+        from blowcontrol.config import ROOT_TOPIC, SERIAL_NUMBER
 
         if not topic:
             if not ROOT_TOPIC or not SERIAL_NUMBER:
@@ -256,4 +256,4 @@ class DysonMQTTClient:
         random_suffix = "".join(
             random.choices(string.ascii_lowercase + string.digits, k=8)
         )
-        return f"dyson2mqtt-{random_suffix}"
+        return f"blowcontrol-{random_suffix}"

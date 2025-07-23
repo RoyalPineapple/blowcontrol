@@ -5,7 +5,7 @@ Oscillation command module for Dyson2MQTT app.
 import logging
 from typing import Any, Dict, Optional, Union
 
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+from blowcontrol.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
 
@@ -376,7 +376,7 @@ def set_oscillation_width(
     """
     import asyncio
 
-    from dyson2mqtt.mqtt.async_client import async_get_state
+    from blowcontrol.mqtt.async_client import async_get_state
 
     # Parse the width input (numeric or named)
     try:
@@ -556,7 +556,7 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict[str, Any]:
     """
     import asyncio
 
-    from dyson2mqtt.mqtt.async_client import async_get_state
+    from blowcontrol.mqtt.async_client import async_get_state
 
     # Parse and validate heading
     try:

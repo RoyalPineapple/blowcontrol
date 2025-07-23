@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test runner for Dyson2MQTT test suite.
+Test runner for BlowControl test suite.
 """
 
 import argparse
@@ -30,7 +30,7 @@ def run_tests(test_type="all", verbose=False, coverage=False, quiet=False):
     # Add coverage if requested
     if coverage:
         cmd.extend(
-            ["--cov=dyson2mqtt", "--cov-report=term-missing", "--cov-report=html"]
+            ["--cov=blowcontrol", "--cov-report=term-missing", "--cov-report=html"]
         )
 
     # Filter by test type
@@ -54,7 +54,7 @@ def run_tests(test_type="all", verbose=False, coverage=False, quiet=False):
 
 def main():
     """Main test runner function."""
-    parser = argparse.ArgumentParser(description="Run Dyson2MQTT test suite")
+    parser = argparse.ArgumentParser(description="Run BlowControl test suite")
     parser.add_argument(
         "--type",
         "-t",

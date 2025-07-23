@@ -6,10 +6,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from dyson2mqtt.commands.auto_mode import set_auto_mode
-from dyson2mqtt.commands.fan_speed import set_fan_speed, validate_fan_speed
-from dyson2mqtt.commands.night_mode import set_night_mode
-from dyson2mqtt.commands.oscillation import (
+from blowcontrol.commands.auto_mode import set_auto_mode
+from blowcontrol.commands.fan_speed import set_fan_speed, validate_fan_speed
+from blowcontrol.commands.night_mode import set_night_mode
+from blowcontrol.commands.oscillation import (
     get_oscillation_info,
     parse_width_input,
     set_oscillation_angles,
@@ -18,15 +18,15 @@ from dyson2mqtt.commands.oscillation import (
     stop_oscillation,
     stop_oscillation_dict,
 )
-from dyson2mqtt.commands.power import request_current_state, set_power
-from dyson2mqtt.commands.sleep_timer import parse_sleep_time, set_sleep_timer
+from blowcontrol.commands.power import request_current_state, set_power
+from blowcontrol.commands.sleep_timer import parse_sleep_time, set_sleep_timer
 
 
 class TestPowerCommands:
     """Test power control commands."""
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.power.DysonMQTTClient")
+    @patch("blowcontrol.commands.power.DysonMQTTClient")
     def test_set_power_on(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test setting power ON."""
         mock_client = Mock()
@@ -40,7 +40,7 @@ class TestPowerCommands:
         mock_client.disconnect.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.power.DysonMQTTClient")
+    @patch("blowcontrol.commands.power.DysonMQTTClient")
     def test_set_power_off(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test setting power OFF."""
         mock_client = Mock()
@@ -52,7 +52,7 @@ class TestPowerCommands:
         mock_client.set_boolean_state.assert_called_once_with("fpwr", False)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.power.DysonMQTTClient")
+    @patch("blowcontrol.commands.power.DysonMQTTClient")
     def test_set_power_flexible_inputs(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -121,7 +121,7 @@ class TestPowerCommands:
         mock_client.set_boolean_state.assert_called_once_with("fpwr", False)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.power.DysonMQTTClient")
+    @patch("blowcontrol.commands.power.DysonMQTTClient")
     def test_set_power_error(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test power command error handling."""
         mock_client = Mock()
@@ -138,7 +138,7 @@ class TestPowerCommands:
         assert result is False
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.power.DysonMQTTClient")
+    @patch("blowcontrol.commands.power.DysonMQTTClient")
     def test_request_current_state(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -191,7 +191,7 @@ class TestFanSpeedCommands:
             validate_fan_speed(11)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.fan_speed.DysonMQTTClient")
+    @patch("blowcontrol.commands.fan_speed.DysonMQTTClient")
     def test_set_fan_speed_valid(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -205,8 +205,8 @@ class TestFanSpeedCommands:
         mock_client.set_numeric_state.assert_called_once_with("fnsp", "0005")
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.fan_speed.set_power")
-    @patch("dyson2mqtt.commands.fan_speed.DysonMQTTClient")
+    @patch("blowcontrol.commands.fan_speed.set_power")
+    @patch("blowcontrol.commands.fan_speed.DysonMQTTClient")
     def test_set_fan_speed_zero(
         self, mock_client_class, mock_set_power, mock_paho_client, mock_env_vars
     ):
@@ -221,7 +221,7 @@ class TestFanSpeedCommands:
         mock_set_power.assert_called_once_with(False)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.fan_speed.DysonMQTTClient")
+    @patch("blowcontrol.commands.fan_speed.DysonMQTTClient")
     def test_set_fan_speed_invalid(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -237,7 +237,7 @@ class TestFanSpeedCommands:
         assert result is False
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.fan_speed.DysonMQTTClient")
+    @patch("blowcontrol.commands.fan_speed.DysonMQTTClient")
     def test_set_fan_speed_error(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -255,7 +255,7 @@ class TestAutoModeCommands:
     """Test auto mode control commands."""
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.auto_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.auto_mode.DysonMQTTClient")
     def test_set_auto_mode_on(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test setting auto mode ON."""
         mock_client = Mock()
@@ -267,7 +267,7 @@ class TestAutoModeCommands:
         mock_client.set_boolean_state.assert_called_once_with("auto", True)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.auto_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.auto_mode.DysonMQTTClient")
     def test_set_auto_mode_off(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -281,7 +281,7 @@ class TestAutoModeCommands:
         mock_client.set_boolean_state.assert_called_once_with("auto", False)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.auto_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.auto_mode.DysonMQTTClient")
     def test_set_auto_mode_error(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -299,7 +299,7 @@ class TestNightModeCommands:
     """Test night mode control commands."""
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.night_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.night_mode.DysonMQTTClient")
     def test_set_night_mode_on(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -313,7 +313,7 @@ class TestNightModeCommands:
         mock_client.set_boolean_state.assert_called_once_with("nmod", True)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.night_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.night_mode.DysonMQTTClient")
     def test_set_night_mode_off(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -327,7 +327,7 @@ class TestNightModeCommands:
         mock_client.set_boolean_state.assert_called_once_with("nmod", False)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.night_mode.DysonMQTTClient")
+    @patch("blowcontrol.commands.night_mode.DysonMQTTClient")
     def test_set_night_mode_error(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -398,7 +398,7 @@ class TestSleepTimerCommands:
             parse_sleep_time(541)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.sleep_timer.DysonMQTTClient")
+    @patch("blowcontrol.commands.sleep_timer.DysonMQTTClient")
     def test_set_sleep_timer(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test setting sleep timer."""
         mock_client = Mock()
@@ -410,7 +410,7 @@ class TestSleepTimerCommands:
         mock_client.set_numeric_state.assert_called_once_with("sltm", "0030")
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.sleep_timer.DysonMQTTClient")
+    @patch("blowcontrol.commands.sleep_timer.DysonMQTTClient")
     def test_set_sleep_timer_zero(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -424,7 +424,7 @@ class TestSleepTimerCommands:
         mock_client.set_numeric_state.assert_called_once_with("sltm", "OFF")
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.sleep_timer.DysonMQTTClient")
+    @patch("blowcontrol.commands.sleep_timer.DysonMQTTClient")
     def test_set_sleep_timer_error(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -474,7 +474,7 @@ class TestOscillationCommands:
         assert info["heading"] == 180
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_angles_valid(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -493,7 +493,7 @@ class TestOscillationCommands:
         mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_angles_zero_width(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -524,7 +524,7 @@ class TestOscillationCommands:
             set_oscillation_angles(90, 360)
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_angles_bounds_adjustment(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -547,7 +547,7 @@ class TestOscillationCommands:
         assert result["upper_angle"] <= 355
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_angles_wrap_around(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -568,7 +568,7 @@ class TestOscillationCommands:
         assert result["upper_angle"] <= 355
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_angles_error(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -583,7 +583,7 @@ class TestOscillationCommands:
         assert "error" in result
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_stop_oscillation(self, mock_client_class, mock_paho_client, mock_env_vars):
         """Test stopping oscillation."""
         mock_client = Mock()
@@ -596,7 +596,7 @@ class TestOscillationCommands:
         mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_stop_oscillation_dict(
         self, mock_client_class, mock_paho_client, mock_env_vars
     ):
@@ -612,7 +612,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):
@@ -632,7 +632,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_invalid(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):
@@ -648,7 +648,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_adjustment(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):
@@ -679,7 +679,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_width_zero(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):
@@ -699,7 +699,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_direction(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):
@@ -720,7 +720,7 @@ class TestOscillationCommands:
 
     @patch("paho.mqtt.client.Client")
     @patch("dyson2mqtt.mqtt.async_client.async_get_state")
-    @patch("dyson2mqtt.commands.oscillation.DysonMQTTClient")
+    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
     def test_set_oscillation_direction_invalid(
         self, mock_client_class, mock_async_get_state, mock_paho_client, mock_env_vars
     ):

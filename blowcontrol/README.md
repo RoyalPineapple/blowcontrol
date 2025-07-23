@@ -1,4 +1,4 @@
-# Dyson2MQTT Modular App
+# BlowControl Modular App
 
 ## Overview
 
@@ -22,7 +22,7 @@ A modular, professional-quality command-line app for controlling Dyson fans over
 This app uses environment variables for configuration. The easiest way to set these is with a `.env` file in your project root:
 
 ```
-# Dyson2MQTT .env configuration example
+# BlowControl .env configuration example
 DEVICE_IP=192.168.3.82
 MQTT_PORT=1883
 MQTT_PASSWORD=your-mqtt-password

@@ -8,10 +8,10 @@ import logging
 import sys
 from typing import Any, Dict, Optional
 
-from dyson2mqtt.commands.auto_mode import set_auto_mode
-from dyson2mqtt.commands.fan_speed import set_fan_speed
-from dyson2mqtt.commands.night_mode import set_night_mode
-from dyson2mqtt.commands.oscillation import (
+from blowcontrol.commands.auto_mode import set_auto_mode
+from blowcontrol.commands.fan_speed import set_fan_speed
+from blowcontrol.commands.night_mode import set_night_mode
+from blowcontrol.commands.oscillation import (
     VALID_WIDTHS,
     WIDTH_DISPLAY_NAMES,
     get_oscillation_info,
@@ -20,11 +20,11 @@ from dyson2mqtt.commands.oscillation import (
     set_oscillation_width,
     stop_oscillation_dict,
 )
-from dyson2mqtt.commands.power import set_power
-from dyson2mqtt.commands.sleep_timer import set_sleep_timer
-from dyson2mqtt.mqtt.client import DysonMQTTClient
-from dyson2mqtt.state.device_state import DeviceStatePrinter
-from dyson2mqtt.utils import parse_boolean
+from blowcontrol.commands.power import set_power
+from blowcontrol.commands.sleep_timer import set_sleep_timer
+from blowcontrol.mqtt.client import DysonMQTTClient
+from blowcontrol.state.device_state import DeviceStatePrinter
+from blowcontrol.utils import parse_boolean
 
 
 def output_result(
@@ -85,28 +85,28 @@ def validate_fan_speed_input(speed_input: Any) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Dyson2MQTT - Control Dyson fans via MQTT",
+        description="BlowControl - Control Dyson fans via MQTT",
         epilog="""
 EXAMPLES:
   # Basic control
-  dyson2mqtt power on                    # Turn fan on
-  dyson2mqtt speed 5                     # Set speed to 5
-  dyson2mqtt auto on                     # Enable auto mode
-  dyson2mqtt night on                    # Enable night mode
-  dyson2mqtt timer 2h15m                 # Set 2h15m sleep timer
+  blowcontrol power on                    # Turn fan on
+  blowcontrol speed 5                     # Set speed to 5
+  blowcontrol auto on                     # Enable auto mode
+  blowcontrol night on                    # Enable night mode
+  blowcontrol timer 2h15m                 # Set 2h15m sleep timer
 
   # Oscillation control
-  dyson2mqtt width wide                  # Set wide oscillation
-  dyson2mqtt direction 180               # Point oscillation at 180°
-  dyson2mqtt stop                        # Stop oscillation
+  blowcontrol width wide                  # Set wide oscillation
+  blowcontrol direction 180               # Point oscillation at 180°
+  blowcontrol stop                        # Stop oscillation
 
   # Monitoring
-  dyson2mqtt listen                      # Real-time status updates
-  dyson2mqtt state --json                # Get current state as JSON
+  blowcontrol listen                      # Real-time status updates
+  blowcontrol state --json                # Get current state as JSON
 
   # Automation
-  dyson2mqtt power on --json             # JSON output for scripts
-  STATUS=$(dyson2mqtt state --json)      # Capture state in variable
+  blowcontrol power on --json             # JSON output for scripts
+  STATUS=$(blowcontrol state --json)      # Capture state in variable
 
 CONFIGURATION:
   Set environment variables or create .env file:
@@ -286,7 +286,7 @@ EXIT CODES:
     else:
         # Suppress MQTT client logs unless debugging
         logging.basicConfig(level=logging.WARNING)
-        logging.getLogger("dyson2mqtt.mqtt.client").setLevel(logging.WARNING)
+        logging.getLogger("blowcontrol.mqtt.client").setLevel(logging.WARNING)
 
     try:
         if args.command == "power":
@@ -472,7 +472,7 @@ EXIT CODES:
             try:
                 import asyncio
 
-                from dyson2mqtt.mqtt.async_client import async_get_state
+                from blowcontrol.mqtt.async_client import async_get_state
 
                 async def run_async_get_state() -> Optional[Dict[str, Any]]:
                     """Async function to get device state."""

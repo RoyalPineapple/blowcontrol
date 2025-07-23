@@ -1,1 +1,1 @@
-# Unit tests for Dyson2MQTT
+# Unit tests for BlowControl

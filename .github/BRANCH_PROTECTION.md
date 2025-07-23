@@ -5,7 +5,7 @@ This guide explains how to set up branch protection rules for the `master` branc
 ## 🔒 Setting Up Branch Protection
 
 ### Step 1: Go to Repository Settings
-1. Navigate to your GitHub repository: https://github.com/RoyalPineapple/dyson2mqtt
+1. Navigate to your GitHub repository: https://github.com/RoyalPineapple/blowcontrol
 2. Click on **Settings** tab
 3. In the left sidebar, click **Branches**
 

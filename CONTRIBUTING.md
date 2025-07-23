@@ -1,6 +1,6 @@
-# Contributing to Dyson2MQTT
+# Contributing to BlowControl
 
-Thank you for your interest in contributing to Dyson2MQTT! This document provides guidelines and setup instructions for contributors.
+Thank you for your interest in contributing to BlowControl! This document provides guidelines and setup instructions for contributors.
 
 ## 🚀 Quick Start
 
@@ -13,8 +13,8 @@ Thank you for your interest in contributing to Dyson2MQTT! This document provide
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/RoyalPineapple/dyson2mqtt.git
-   cd dyson2mqtt
+   git clone https://github.com/RoyalPineapple/blowcontrol.git
+   cd blowcontrol
    ```
 
 2. **Create a virtual environment**
@@ -48,7 +48,7 @@ pytest tests/
 
 ### Run with coverage
 ```bash
-pytest tests/ --cov=dyson2mqtt --cov-report=html
+pytest tests/ --cov=blowcontrol --cov-report=html
 ```
 
 ### Run specific test categories
@@ -76,19 +76,19 @@ The following checks run automatically on commit:
 ### Manual checks
 ```bash
 # Format code
-black dyson2mqtt/ tests/
+black blowcontrol/ tests/
 
 # Sort imports
-isort dyson2mqtt/ tests/
+isort blowcontrol/ tests/
 
 # Check code style
-flake8 dyson2mqtt/ tests/
+flake8 blowcontrol/ tests/
 
 # Type checking
-mypy dyson2mqtt/
+mypy blowcontrol/
 
 # Security analysis
-bandit -r dyson2mqtt/
+bandit -r blowcontrol/
 ```
 
 ## 📝 Development Guidelines
@@ -196,4 +196,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for contributing to Dyson2MQTT! 🎉
+Thank you for contributing to BlowControl! 🎉

@@ -6,7 +6,7 @@ Tests for oscillation angle calculations and conversions.
 import unittest
 from unittest.mock import patch
 
-from dyson2mqtt.commands.oscillation import (
+from blowcontrol.commands.oscillation import (
     WIDTH_DISPLAY_NAMES,
     WIDTH_NAMES,
     get_oscillation_info,
@@ -22,7 +22,7 @@ class TestOscillationAngles(unittest.TestCase):
         """Set up test fixtures."""
         # Create a mock client that will be used by all oscillation functions
         self.mock_client_patcher = patch(
-            "dyson2mqtt.commands.oscillation.DysonMQTTClient"
+            "blowcontrol.commands.oscillation.DysonMQTTClient"
         )
         self.mock_client_class = self.mock_client_patcher.start()
         self.mock_client = self.mock_client_class.return_value

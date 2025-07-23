@@ -1,8 +1,8 @@
-# Dyson2MQTT
+# BlowControl
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/RoyalPineapple/dyson2mqtt/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/dyson2mqtt/actions)
-[![Codecov](https://codecov.io/gh/RoyalPineapple/dyson2mqtt/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/dyson2mqtt)
+[![Tests](https://github.com/RoyalPineapple/blowcontrol/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/blowcontrol/actions)
+[![Codecov](https://codecov.io/gh/RoyalPineapple/blowcontrol/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/blowcontrol)
 
 A simple application for controlling Dyson fans via MQTT with support for real-time monitoring, async operations, and machine-readable JSON output.
 
@@ -31,14 +31,14 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
 3. **Control your device**:
    ```bash
    # Basic control
-   dyson2mqtt power on
-   dyson2mqtt speed 5
+   blowcontrol power on
+   blowcontrol speed 5
 
    # Monitor state
-   dyson2mqtt listen
+   blowcontrol listen
 
    # Get JSON output for automation
-   dyson2mqtt state --json
+   blowcontrol state --json
    ```
 
 ### Option 2: Run as Python Module
@@ -60,14 +60,14 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
 3. **Control your device**:
    ```bash
    # Basic control
-   python3 -m dyson2mqtt power on
-   python3 -m dyson2mqtt speed 5
+   python3 -m blowcontrol power on
+   python3 -m blowcontrol speed 5
 
    # Monitor state
-   python3 -m dyson2mqtt listen
+   python3 -m blowcontrol listen
 
    # Get JSON output for automation
-   python3 -m dyson2mqtt state --json
+   python3 -m blowcontrol state --json
    ```
 
 ## 🔑 Getting Your Device Credentials
@@ -138,15 +138,15 @@ opendyson help
 
 ## 📖 Documentation
 
-- **[App Documentation](./dyson2mqtt/README.md)**: Detailed usage guide, commands, and examples
-- **[Game Plan](./dyson2mqtt/GAMEPLAN.md)**: Development roadmap and architecture notes
-- **[Message Analysis](./dyson2mqtt/commands/dyson_message_analysis.md)**: Complete MQTT message reference
+- **[App Documentation](./blowcontrol/README.md)**: Detailed usage guide, commands, and examples
+- **[Game Plan](./blowcontrol/GAMEPLAN.md)**: Development roadmap and architecture notes
+- **[Message Analysis](./blowcontrol/commands/dyson_message_analysis.md)**: Complete MQTT message reference
 
 ## 🏗️ Project Structure
 
 ```
-dyson2mqtt/
-├── dyson2mqtt/            # Main application
+blowcontrol/
+├── blowcontrol/            # Main application
 │   ├── commands/          # Individual command implementations
 │   ├── mqtt/              # MQTT client and async operations
 │   ├── state/             # Device state management
@@ -159,16 +159,16 @@ dyson2mqtt/
 
 | Command | Category | Syntax | Arguments | Description |
 |---------|----------|--------|-----------|-------------|
-| `power` | **Control** | `dyson2mqtt power <state>` | `on\|off` | Turn the fan ON or OFF |
-| `auto` | **Control** | `dyson2mqtt auto <state>` | `on\|off` | Enable/disable auto mode |
-| `night` | **Control** | `dyson2mqtt night <state>` | `on\|off` | Enable/disable night mode |
-| `speed` | **Control** | `dyson2mqtt speed <speed>` | `0-10` | Set fan speed (0 turns off) |
-| `timer` | **Control** | `dyson2mqtt timer <time>` | `0-540`, `2h15m`, `2:15`, `1h`, `45m` | Set sleep timer (0=off) |
-| `listen` | **Monitoring** | `dyson2mqtt listen` | *(none)* | Real-time monitoring (Ctrl+C to exit) |
-| `state` | **Monitoring** | `dyson2mqtt state [--json]` | `--json` (optional) | Fetch current state with optional JSON output |
-| `width` | **Oscillation** | `dyson2mqtt width <width>` | `off\|narrow\|medium\|wide\|full` | Set oscillation width |
-| `direction` | **Oscillation** | `dyson2mqtt direction <degrees>` | `0-359` | Set oscillation direction |
-| `stop` | **Oscillation** | `dyson2mqtt stop` | *(none)* | Stop oscillation |
+| `power` | **Control** | `blowcontrol power <state>` | `on\|off` | Turn the fan ON or OFF |
+| `auto` | **Control** | `blowcontrol auto <state>` | `on\|off` | Enable/disable auto mode |
+| `night` | **Control** | `blowcontrol night <state>` | `on\|off` | Enable/disable night mode |
+| `speed` | **Control** | `blowcontrol speed <speed>` | `0-10` | Set fan speed (0 turns off) |
+| `timer` | **Control** | `blowcontrol timer <time>` | `0-540`, `2h15m`, `2:15`, `1h`, `45m` | Set sleep timer (0=off) |
+| `listen` | **Monitoring** | `blowcontrol listen` | *(none)* | Real-time monitoring (Ctrl+C to exit) |
+| `state` | **Monitoring** | `blowcontrol state [--json]` | `--json` (optional) | Fetch current state with optional JSON output |
+| `width` | **Oscillation** | `blowcontrol width <width>` | `off\|narrow\|medium\|wide\|full` | Set oscillation width |
+| `direction` | **Oscillation** | `blowcontrol direction <degrees>` | `0-359` | Set oscillation direction |
+| `stop` | **Oscillation** | `blowcontrol stop` | *(none)* | Stop oscillation |
 
 ### Command Categories
 
@@ -180,24 +180,24 @@ dyson2mqtt/
 
 ```bash
 # Basic control
-dyson2mqtt power on                    # Turn fan on
-dyson2mqtt speed 5                     # Set speed to 5
-dyson2mqtt auto on                     # Enable auto mode
-dyson2mqtt night on                    # Enable night mode
-dyson2mqtt timer 2h15m                 # Set 2h15m sleep timer
+blowcontrol power on                    # Turn fan on
+blowcontrol speed 5                     # Set speed to 5
+blowcontrol auto on                     # Enable auto mode
+blowcontrol night on                    # Enable night mode
+blowcontrol timer 2h15m                 # Set 2h15m sleep timer
 
 # Oscillation control
-dyson2mqtt width wide                  # Set wide oscillation
-dyson2mqtt direction 180               # Point oscillation at 180°
-dyson2mqtt stop                        # Stop oscillation
+blowcontrol width wide                  # Set wide oscillation
+blowcontrol direction 180               # Point oscillation at 180°
+blowcontrol stop                        # Stop oscillation
 
 # Monitoring
-dyson2mqtt listen                      # Real-time status updates
-dyson2mqtt state --json                # Get current state as JSON
+blowcontrol listen                      # Real-time status updates
+blowcontrol state --json                # Get current state as JSON
 
 # Automation
-dyson2mqtt power on --json             # JSON output for scripts
-STATUS=$(dyson2mqtt state --json)      # Capture state in variable
+blowcontrol power on --json             # JSON output for scripts
+STATUS=$(blowcontrol state --json)      # Capture state in variable
 ```
 
 ## 🤖 Automation Examples
@@ -205,12 +205,12 @@ STATUS=$(dyson2mqtt state --json)      # Capture state in variable
 ### Shell Scripting
 ```bash
 # Morning routine
-dyson2mqtt power on
-dyson2mqtt auto on
-dyson2mqtt speed 3
+blowcontrol power on
+blowcontrol auto on
+blowcontrol speed 3
 
 # Get current status
-STATUS=$(dyson2mqtt state --json)
+STATUS=$(blowcontrol state --json)
 echo $STATUS | jq '.state.product-state.fpwr'
 ```
 
@@ -218,7 +218,7 @@ echo $STATUS | jq '.state.product-state.fpwr'
 ```python
 import json, subprocess
 
-result = subprocess.run(['dyson2mqtt', 'state', '--json'],
+result = subprocess.run(['blowcontrol', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 
@@ -229,7 +229,7 @@ if state['success']:
 ## 🔍 Troubleshooting
 
 - **Connection issues**: Verify `.env` configuration and network connectivity
-- **No response**: Use `dyson2mqtt listen` to check device communication
+- **No response**: Use `blowcontrol listen` to check device communication
 - **JSON parsing**: Ensure you're using `--json` flag for machine-readable output
 - **Command not found**: Make sure you've installed the package with `pip install -e .`
 
@@ -255,8 +255,8 @@ This project uses GitHub Actions for continuous integration and deployment:
 ### Local Development Setup
 ```bash
 # Clone and setup
-git clone https://github.com/RoyalPineapple/dyson2mqtt.git
-cd dyson2mqtt
+git clone https://github.com/RoyalPineapple/blowcontrol.git
+cd blowcontrol
 
 # Install development dependencies
 pip install -e ".[dev]"
@@ -309,7 +309,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📚 Documentation
 
-- **[App Documentation](./dyson2mqtt/README.md)** - Detailed usage, architecture, and examples
-- **[Message Analysis](./dyson2mqtt/commands/dyson_message_analysis.md)** - Complete MQTT message reference
+- **[App Documentation](./blowcontrol/README.md)** - Detailed usage, architecture, and examples
+- **[Message Analysis](./blowcontrol/commands/dyson_message_analysis.md)** - Complete MQTT message reference
 - **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines and setup
 - **[Changelog](CHANGELOG.md)** - Version history and changes

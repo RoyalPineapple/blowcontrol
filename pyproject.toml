@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dyson2mqtt"
+name = "BlowControl"
 version = "1.0.0"
 description = "Professional Dyson Fan Controller with MQTT Integration"
 readme = "README.md"
@@ -14,7 +14,7 @@ authors = [
 maintainers = [
     {name = "Alex Odawa", email = "alex@squareup.com"}
 ]
-keywords = ["dyson", "mqtt", "fan", "controller", "home-automation", "iot"]
+keywords = ["blowcontrol", "mqtt", "fan", "controller", "home-automation", "iot"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -53,27 +53,27 @@ dev = [
 ]
 
 [project.scripts]
-dyson2mqtt = "dyson2mqtt.cli:main"
+blowcontrol = "blowcontrol.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/RoyalPineapple/dyson2mqtt"
-Repository = "https://github.com/RoyalPineapple/dyson2mqtt"
-Documentation = "https://github.com/RoyalPineapple/dyson2mqtt#readme"
-"Bug Tracker" = "https://github.com/RoyalPineapple/dyson2mqtt/issues"
+Homepage = "https://github.com/RoyalPineapple/blowcontrol"
+Repository = "https://github.com/RoyalPineapple/blowcontrol"
+Documentation = "https://github.com/RoyalPineapple/blowcontrol#readme"
+"Bug Tracker" = "https://github.com/RoyalPineapple/blowcontrol/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["dyson2mqtt*"]
+include = ["blowcontrol*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --cov=dyson2mqtt --cov-report=term-missing"
+addopts = "-v --cov=blowcontrol --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["dyson2mqtt"]
+source = ["blowcontrol"]
 omit = [
     "*/tests/*",
     "*/test_*",
@@ -116,7 +116,7 @@ extend-exclude = '''
 profile = "black"
 multi_line_output = 3
 line_length = 88
-known_first_party = ["dyson2mqtt"]
+known_first_party = ["blowcontrol"]
 
 [tool.mypy]
 python_version = "3.9"

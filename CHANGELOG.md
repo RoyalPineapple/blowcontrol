@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-XX
 
 ### Added
-- Initial release of Dyson2MQTT
+- Initial release of BlowControl
 - CLI interface for Dyson fan control
 - MQTT client for device communication
 - Support for power, speed, auto mode, night mode, and sleep timer

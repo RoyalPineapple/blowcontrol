@@ -1,6 +1,6 @@
-# Dyson2MQTT Test Suite
+# BlowControl Test Suite
 
-A comprehensive test suite for the Dyson2MQTT project, covering unit tests, integration tests, and mock tests.
+A comprehensive test suite for the BlowControl project, covering unit tests, integration tests, and mock tests.
 
 ## 🚀 Quick Start
 
@@ -88,13 +88,13 @@ The test suite includes comprehensive fixtures in `conftest.py`:
 Generate coverage reports:
 ```bash
 # Terminal coverage report
-pytest --cov=dyson2mqtt --cov-report=term-missing
+pytest --cov=blowcontrol --cov-report=term-missing
 
 # HTML coverage report
-pytest --cov=dyson2mqtt --cov-report=html
+pytest --cov=blowcontrol --cov-report=html
 
 # Both
-pytest --cov=dyson2mqtt --cov-report=term-missing --cov-report=html
+pytest --cov=blowcontrol --cov-report=term-missing --cov-report=html
 ```
 
 ## 🎯 Test Examples
@@ -133,7 +133,7 @@ pytest --pdb tests/
 
 ### Mocking External Dependencies
 ```python
-@patch('dyson2mqtt.mqtt.client.DysonMQTTClient')
+@patch('blowcontrol.mqtt.client.DysonMQTTClient')
 def test_mqtt_operation(self, mock_client_class):
     mock_client = Mock()
     mock_client_class.return_value = mock_client
@@ -157,7 +157,7 @@ def test_error_handling(self):
 ```python
 def test_cli_command(self):
     result = subprocess.run([
-        sys.executable, '-m', 'dyson2mqtt', 'power', 'on'
+        sys.executable, '-m', 'blowcontrol', 'power', 'on'
     ], capture_output=True, text=True)
 
     assert result.returncode == 0
@@ -169,7 +169,7 @@ def test_cli_command(self):
 ### Import Errors
 If you get import errors, make sure:
 1. You're running tests from the project root
-2. The `dyson2mqtt` module is in your Python path
+2. The `blowcontrol` module is in your Python path
 3. All dependencies are installed
 
 ### Mock Issues
@@ -193,7 +193,7 @@ The test suite is designed to work with CI/CD pipelines:
 - name: Run Tests
   run: |
     pip install -r requirements-test.txt
-    pytest tests/ --cov=dyson2mqtt --cov-report=xml
+    pytest tests/ --cov=blowcontrol --cov-report=xml
 ```
 
 ## 🤝 Contributing

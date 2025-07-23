@@ -10,8 +10,8 @@ import logging
 import threading
 from typing import Any, Dict, Optional
 
-from dyson2mqtt.config import ROOT_TOPIC, SERIAL_NUMBER
-from dyson2mqtt.mqtt.client import DysonMQTTClient
+from blowcontrol.config import ROOT_TOPIC, SERIAL_NUMBER
+from blowcontrol.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
 

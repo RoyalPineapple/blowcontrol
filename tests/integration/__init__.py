@@ -1,1 +1,1 @@
-# Integration tests for Dyson2MQTT
+# Integration tests for BlowControl

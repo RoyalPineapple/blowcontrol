@@ -1,5 +1,5 @@
 """
-Utility functions for Dyson2MQTT.
+Utility functions for BlowControl.
 """
 
 from typing import Any

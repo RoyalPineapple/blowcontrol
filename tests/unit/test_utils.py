@@ -4,7 +4,7 @@ Unit tests for utility functions.
 
 import pytest
 
-from dyson2mqtt.utils import parse_boolean
+from blowcontrol.utils import parse_boolean
 
 
 class TestParseBoolean:
