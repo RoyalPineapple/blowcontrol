@@ -2,10 +2,10 @@
 
 Based on the Dyson Purifier Cool PC1 manual and captured MQTT messages, this document provides a comprehensive breakdown of all status and environmental messages.
 
-## Device Information
+## Test Device Information
 - **Model**: TP11 (Dyson Purifier Cool PC1)
 - **Type**: 438 (Purifier Cool)
-- **Serial**: 9HC-EU-UDB6777A
+- **Serial**: XXX-XX-XXXXXXXX
 - **Product Category**: ec (Environmental Control)
 - **Connection**: lecAndWifi (Local & WiFi)
 
