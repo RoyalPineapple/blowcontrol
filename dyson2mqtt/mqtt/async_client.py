@@ -74,7 +74,7 @@ async def async_get_state(
 
             client._subscribed_topics = topics
             client._user_callback = state_callback
-            client._client.on_message = state_callback  # type: ignore
+            client._client.on_message = state_callback
 
             client.connect()
 

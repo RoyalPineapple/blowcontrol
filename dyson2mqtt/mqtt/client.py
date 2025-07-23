@@ -47,7 +47,7 @@ class DysonMQTTClient:
         self._client.on_message = None  # Set by user if needed
         self._connected = False
         self._subscribed_topics: list[str] = []
-        self._user_callback = None
+        self._user_callback: Optional[Callable[..., Any]] = None
 
     def connect(self, keepalive: int = 60) -> None:
         """Connect to the MQTT broker."""
@@ -80,7 +80,7 @@ class DysonMQTTClient:
         self._user_callback = callback
         if self._connected:
             self._client.subscribe(topic)
-        self._client.on_message = callback  # type: ignore
+        self._client.on_message = callback
 
     def subscribe_and_listen(
         self, topics: Union[str, list[str]], callback: Optional[Callable] = None
@@ -101,7 +101,7 @@ class DysonMQTTClient:
         cb = callback or default_callback
         self._subscribed_topics = topics
         self._user_callback = cb
-        self._client.on_message = cb  # type: ignore
+        self._client.on_message = cb
         self.connect()
         print("Listening for messages. Press Ctrl+C to exit.")
         try:
@@ -242,7 +242,7 @@ class DysonMQTTClient:
                     logger.info(f"(Re)subscribing to topic: {topic}")
                     self._client.subscribe(topic)
             if self._user_callback:
-                self._client.on_message = self._user_callback  # type: ignore
+                self._client.on_message = self._user_callback
         else:
             logger.error(f"Failed to connect to MQTT broker. Return code: {rc}")
 
