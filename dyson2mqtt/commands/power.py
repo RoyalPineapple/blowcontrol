@@ -36,7 +36,7 @@ def set_power(on: Union[bool, str, int]) -> bool:
         return False
 
 
-def request_current_state():
+def request_current_state() -> None:
     """
     Send a REQUEST-CURRENT-STATE command to the Dyson device.
     """

@@ -2,8 +2,10 @@
 Utility functions for Dyson2MQTT.
 """
 
+from typing import Any
 
-def parse_boolean(value) -> bool:
+
+def parse_boolean(value: Any) -> bool:
     """
     Parse flexible boolean input into a boolean value.
 

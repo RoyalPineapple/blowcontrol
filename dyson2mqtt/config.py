@@ -18,7 +18,7 @@ ROOT_TOPIC = os.getenv("ROOT_TOPIC", "438M")
 SERIAL_NUMBER = os.getenv("SERIAL_NUMBER", "")
 
 
-def validate_config():
+def validate_config() -> None:
     """Validate required configuration settings."""
     if not MQTT_PASSWORD:
         raise ValueError("MQTT_PASSWORD environment variable is required")

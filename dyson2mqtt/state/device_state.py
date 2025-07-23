@@ -122,7 +122,7 @@ class DeviceStatePrinter:
             return str(value)
 
     @staticmethod
-    def print_current_state(msg: dict):
+    def print_current_state(msg: dict) -> None:
         """Print comprehensive current state with all parameters."""
         ps = msg.get("product-state", {})
         print("\n" + "=" * 50)
@@ -187,7 +187,7 @@ class DeviceStatePrinter:
         print("=" * 50 + "\n")
 
     @staticmethod
-    def print_state_change(msg: dict):
+    def print_state_change(msg: dict) -> None:
         """Print state changes with before/after values."""
         ps = msg.get("product-state", {})
         print("\n" + "=" * 50)
@@ -217,7 +217,7 @@ class DeviceStatePrinter:
         print("=" * 50 + "\n")
 
     @staticmethod
-    def print_environmental(msg: dict):
+    def print_environmental(msg: dict) -> None:
         """Print environmental sensor data with proper formatting."""
         data = msg.get("data", {})
         print("\n" + "=" * 50)
@@ -244,7 +244,7 @@ class DeviceStatePrinter:
         print("=" * 50 + "\n")
 
     @staticmethod
-    def print_location(msg: dict):
+    def print_location(msg: dict) -> None:
         """Print device location/position information."""
         print("\n" + "=" * 50)
         print("         DEVICE LOCATION")
@@ -260,7 +260,7 @@ class DeviceStatePrinter:
         print("=" * 50 + "\n")
 
     @staticmethod
-    def print_any_message(msg: dict):
+    def print_any_message(msg: dict) -> None:
         """Smart printer that detects message type and formats appropriately."""
         msg_type = msg.get("msg", "UNKNOWN")
 
@@ -284,7 +284,7 @@ class DeviceStateListener:
     Thread-safe MQTT listener that maintains the latest device state.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._lock = threading.Lock()
         self._current_state: Optional[Dict[str, Any]] = None
         self._environmental_data: Optional[Dict[str, Any]] = None
@@ -294,7 +294,7 @@ class DeviceStateListener:
         self._stop_event = threading.Event()
         self._running = False
 
-    def _mqtt_callback(self, client, userdata, msg):
+    def _mqtt_callback(self, client: Any, userdata: Any, msg: Any) -> None:
         """Handle incoming MQTT messages and update state safely."""
         print(
             f"[DeviceStateListener] DEBUG: Received message on {msg.topic}: "
@@ -351,14 +351,14 @@ class DeviceStateListener:
                 f"{ROOT_TOPIC}/{SERIAL_NUMBER}/status/fault",
             ]
 
-            def listener_worker():
+            def listener_worker() -> None:
                 try:
                     print("[DeviceStateListener] Starting listener worker...")
 
                     # Start the listener in the background
                     import threading
 
-                    def delayed_request():
+                    def delayed_request() -> None:
                         # Wait a few seconds for connection to establish
                         time.sleep(3)
                         print(
@@ -397,7 +397,7 @@ class DeviceStateListener:
             print(f"[DeviceStateListener] Failed to start: {e}")
             return False
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the listener thread."""
         if not self._running:
             return

@@ -11,7 +11,7 @@ from dyson2mqtt.mqtt.client import DysonMQTTClient
 logger = logging.getLogger(__name__)
 
 
-def parse_int_input(value) -> int:
+def parse_int_input(value: Any) -> int:
     """
     Parse integer input from string or int.
     Raises ValueError for invalid input.

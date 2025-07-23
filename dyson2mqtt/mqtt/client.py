@@ -9,7 +9,7 @@ import datetime
 import logging
 import random
 import string
-from typing import Callable, Optional
+from typing import Any, Callable, Optional, Union
 
 import paho.mqtt.client as mqtt
 
@@ -51,7 +51,7 @@ class DysonMQTTClient:
         self._client.on_disconnect = self._on_disconnect
         self._client.on_message = None  # Set by user if needed
         self._connected = False
-        self._subscribed_topics = []
+        self._subscribed_topics: list[str] = []
         self._user_callback = None
 
     def connect(self, keepalive: int = 60) -> None:
@@ -85,9 +85,9 @@ class DysonMQTTClient:
         self._user_callback = callback
         if self._connected:
             self._client.subscribe(topic)
-        self._client.on_message = callback
+        self._client.on_message = callback  # type: ignore
 
-    def subscribe_and_listen(self, topics, callback=None):
+    def subscribe_and_listen(self, topics: Union[str, list[str]], callback: Optional[Callable] = None) -> None:
         """
         Subscribe to one or more topics and print all received messages until interrupted.
         :param topics: str or list of str
@@ -98,13 +98,13 @@ class DysonMQTTClient:
         if isinstance(topics, str):
             topics = [topics]
 
-        def default_callback(client, userdata, msg):
+        def default_callback(client: Any, userdata: Any, msg: Any) -> None:
             print(f"[MQTT] {msg.topic}: {msg.payload.decode(errors='replace')}")
 
         cb = callback or default_callback
         self._subscribed_topics = topics
         self._user_callback = cb
-        self._client.on_message = cb
+        self._client.on_message = cb  # type: ignore
         self.connect()
         print("Listening for messages. Press Ctrl+C to exit.")
         try:
@@ -197,7 +197,7 @@ class DysonMQTTClient:
                 raise ValueError("ROOT_TOPIC and SERIAL_NUMBER must be set.")
             topic = f"{ROOT_TOPIC}/{SERIAL_NUMBER}/command"
         now = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-        payload = {"msg": msg_type, "mode-reason": "RAPP", "time": now}
+        payload: dict[str, Any] = {"msg": msg_type, "mode-reason": "RAPP", "time": now}
         if data:
             payload["data"] = data
 
@@ -235,7 +235,7 @@ class DysonMQTTClient:
             logger.error(f"Failed to send standalone {msg_type} command: {e}")
             return False
 
-    def _on_connect(self, client, userdata, flags, rc):
+    def _on_connect(self, client: Any, userdata: Any, flags: Any, rc: int) -> None:
         if rc == 0:
             logger.info("Connected to MQTT broker successfully.")
             self._connected = True
@@ -245,11 +245,11 @@ class DysonMQTTClient:
                     logger.info(f"(Re)subscribing to topic: {topic}")
                     self._client.subscribe(topic)
             if self._user_callback:
-                self._client.on_message = self._user_callback
+                self._client.on_message = self._user_callback  # type: ignore
         else:
             logger.error(f"Failed to connect to MQTT broker. Return code: {rc}")
 
-    def _on_disconnect(self, client, userdata, rc):
+    def _on_disconnect(self, client: Any, userdata: Any, rc: int) -> None:
         logger.info("Disconnected from MQTT broker.")
         self._connected = False
 

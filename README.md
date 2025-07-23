@@ -27,19 +27,19 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
    # Basic control
    python3 -m app power on
    python3 -m app speed 5
-   
+
    # Monitor state
    python3 -m app listen
-   
+
    # Get JSON output for automation
    python3 -m app state --json
    ```
 
 ## ✨ Features
 
-- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer, 
-oscillation, direction 
-- **📊 State Monitoring**: Real-time listening, on-demand state fetching  
+- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer,
+oscillation, direction
+- **📊 State Monitoring**: Real-time listening, on-demand state fetching
 - **🤖 JSON Output**: Machine-readable responses for automation
 
 
@@ -54,7 +54,7 @@ oscillation, direction
 ```
 dyson2mqtt/
 ├── dyson2mqtt/            # Main application
-│   ├── commands/          # Individual command implementations  
+│   ├── commands/          # Individual command implementations
 │   ├── mqtt/              # MQTT client and async operations
 │   ├── state/             # Device state management
 │   └── cli.py            # Command-line interface
@@ -97,7 +97,7 @@ echo $STATUS | jq '.state.product-state.fpwr'
 ```python
 import json, subprocess
 
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'], 
+result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 
@@ -123,7 +123,7 @@ echo $STATUS | jq '.state.product-state.fpwr'
 ```python
 import json, subprocess
 
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'], 
+result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 
@@ -134,7 +134,7 @@ if state['success']:
 ## 🔍 Troubleshooting
 
 - **Connection issues**: Verify `.env` configuration and network connectivity
-- **No response**: Use `python3 -m app listen` to check device communication  
+- **No response**: Use `python3 -m app listen` to check device communication
 - **JSON parsing**: Ensure you're using `--json` flag for machine-readable output
 
 ## 🏛️ Architecture
@@ -213,8 +213,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📚 Documentation
 
-- **[App Documentation](./app/README.md)** - Detailed usage, architecture, and examples
-- **[Message Analysis](./experimentation/dyson_message_analysis.md)** - Complete MQTT message reference  
-- **[Development Roadmap](./app/GAMEPLAN.md)** - Project roadmap and checklist
+- **[App Documentation](./dyson2mqtt/README.md)** - Detailed usage, architecture, and examples
+- **[Message Analysis](./experimentation/dyson_message_analysis.md)** - Complete MQTT message reference
 - **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines and setup
-- **[Changelog](CHANGELOG.md)** - Version history and changes 
+- **[Changelog](CHANGELOG.md)** - Version history and changes

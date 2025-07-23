@@ -3,14 +3,14 @@ Oscillation command module for Dyson2MQTT app.
 """
 
 import logging
-from typing import Union
+from typing import Any, Dict, Optional, Union
 
 from dyson2mqtt.mqtt.client import DysonMQTTClient
 
 logger = logging.getLogger(__name__)
 
 
-def parse_int_input(value) -> int:
+def parse_int_input(value: Any) -> int:
     """
     Parse integer input from string or int.
     Raises ValueError for invalid input.
@@ -155,7 +155,7 @@ def set_oscillation_angles(
         lower_option2 = (heading_option2 - half_width) % 360
 
         # Choose the option closest to the original heading
-        def angle_distance(a1, a2):
+        def angle_distance(a1: int, a2: int) -> int:
             """Calculate the shortest angular distance between two angles."""
             diff = abs(a1 - a2)
             return min(diff, 360 - diff)
@@ -282,7 +282,7 @@ def stop_oscillation() -> bool:
         return False
 
 
-def get_oscillation_info(osal: str, osau: str) -> dict:
+def get_oscillation_info(osal: str, osau: str) -> dict[str, Any]:
     """
     Convert raw oscillation angles back to width/heading format.
 
@@ -325,7 +325,7 @@ WIDTH_NAMES = {"off": 0, "narrow": 45, "medium": 90, "wide": 180, "full": 350}
 WIDTH_DISPLAY_NAMES = {v: k for k, v in WIDTH_NAMES.items()}
 
 
-def parse_width_input(width_input) -> int:
+def parse_width_input(width_input: Any) -> int:
     """
     Parse width input - can be numeric or named (off, narrow, medium, wide, full).
 
@@ -357,7 +357,7 @@ def parse_width_input(width_input) -> int:
         raise ValueError(f"Width must be an integer or string, got {type(width_input)}")
 
 
-def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
+def set_oscillation_width(width_input: Any, fallback_heading: int = 180) -> dict[str, Any]:
     """
     Set oscillation width centered on current fan position (Dyson app style).
 
@@ -430,7 +430,7 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
         logger.info("Getting current device state to determine fan position...")
 
         # Run the async state function
-        async def get_state():
+        async def get_state() -> Optional[Dict[str, Any]]:
             return await async_get_state(quiet=True)
 
         state_result = asyncio.run(get_state())
@@ -517,7 +517,7 @@ def set_oscillation_width(width_input, fallback_heading: int = 180) -> dict:
     return result
 
 
-def stop_oscillation_dict() -> dict:
+def stop_oscillation_dict() -> dict[str, Any]:
     """Stop oscillation and return dict format like set_oscillation_angles."""
     success = stop_oscillation()
     return {
@@ -534,7 +534,7 @@ def stop_oscillation_dict() -> dict:
     }
 
 
-def set_oscillation_direction(heading: Union[int, str]) -> dict:
+def set_oscillation_direction(heading: Union[int, str]) -> dict[str, Any]:
     """
     Set oscillation heading (center direction) while preserving current width.
     If oscillation is currently off, just sets the heading without turning oscillation on.
@@ -595,7 +595,7 @@ def set_oscillation_direction(heading: Union[int, str]) -> dict:
         logger.info("Getting current device state to determine oscillation status...")
 
         # Run the async state function
-        async def get_state():
+        async def get_state() -> Optional[Dict[str, Any]]:
             return await async_get_state(quiet=True)
 
         state_result = asyncio.run(get_state())

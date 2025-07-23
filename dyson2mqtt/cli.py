@@ -6,6 +6,7 @@ import argparse
 import json
 import logging
 import sys
+from typing import Any, Dict, Optional
 
 from dyson2mqtt.commands.auto_mode import set_auto_mode
 from dyson2mqtt.commands.fan_speed import set_fan_speed
@@ -17,7 +18,7 @@ from dyson2mqtt.commands.oscillation import (
     parse_width_input,
     set_oscillation_direction,
     set_oscillation_width,
-    stop_oscillation,
+    stop_oscillation_dict,
 )
 from dyson2mqtt.commands.power import set_power
 from dyson2mqtt.commands.sleep_timer import set_sleep_timer
@@ -29,9 +30,9 @@ from dyson2mqtt.utils import parse_boolean
 def output_result(
     success: bool,
     message: str = "",
-    data: dict = None,
+    data: Optional[dict] = None,
     json_mode: bool = False,
-):
+) -> None:
     """Helper function for consistent output formatting."""
     if json_mode:
         result = {"success": success, "message": message}
@@ -45,7 +46,7 @@ def output_result(
             print(f"✗ {message}")
 
 
-def parse_int_input(value) -> int:
+def parse_int_input(value: Any) -> int:
     """
     Parse integer input from string or int.
     Raises ValueError for invalid input.
@@ -58,7 +59,7 @@ def parse_int_input(value) -> int:
         raise ValueError(f"Cannot convert {value} to integer")
 
 
-def validate_oscillation_heading(heading_input) -> int:
+def validate_oscillation_heading(heading_input: Any) -> int:
     """
     Validate oscillation heading input.
     Returns validated heading as int.
@@ -70,7 +71,7 @@ def validate_oscillation_heading(heading_input) -> int:
     return heading
 
 
-def validate_fan_speed_input(speed_input) -> int:
+def validate_fan_speed_input(speed_input: Any) -> int:
     """
     Validate fan speed input.
     Returns validated speed as int.
@@ -82,7 +83,7 @@ def validate_fan_speed_input(speed_input) -> int:
     return speed
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Dyson2MQTT - Control Dyson fans via MQTT",
         epilog="""
@@ -388,7 +389,7 @@ EXIT CODES:
                 client = DysonMQTTClient(client_id="d2mqtt-listen")
                 client.connect()
 
-                def pretty_callback(client_, userdata, msg):
+                def pretty_callback(client_: Any, userdata: Any, msg: Any) -> None:
                     """Pretty print MQTT messages."""
                     try:
                         data = json.loads(msg.payload.decode(errors="replace"))
@@ -444,7 +445,7 @@ EXIT CODES:
                     except Exception as e:
                         print(f"Error parsing message: {e}")
 
-                def json_callback(client_, userdata, msg):
+                def json_callback(client_: Any, userdata: Any, msg: Any) -> None:
                     """Output raw JSON MQTT messages."""
                     try:
                         data = json.loads(msg.payload.decode(errors="replace"))
@@ -454,7 +455,7 @@ EXIT CODES:
 
                 callback = json_callback if args.json else pretty_callback
 
-                client.subscribe_and_listen(callback)
+                client.subscribe_and_listen(["status/current", "status/fault"], callback)
             except KeyboardInterrupt:
                 print("\n👋 Stopping listener...")
                 client.disconnect()
@@ -471,7 +472,7 @@ EXIT CODES:
 
                 from dyson2mqtt.mqtt.async_client import async_get_state
 
-                async def run_async_get_state():
+                async def run_async_get_state() -> Optional[Dict[str, Any]]:
                     """Async function to get device state."""
                     return await async_get_state()
 
@@ -571,7 +572,7 @@ EXIT CODES:
                 sys.exit(1)
         elif args.command == "stop":
             try:
-                result = stop_oscillation()
+                result = stop_oscillation_dict()
                 if result["success"]:
                     output_result(
                         True,

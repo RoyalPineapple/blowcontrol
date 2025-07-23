@@ -26,7 +26,7 @@ async def async_get_state(
     if not ROOT_TOPIC or not SERIAL_NUMBER:
         raise ValueError("ROOT_TOPIC and SERIAL_NUMBER must be set.")
 
-    def sync_get_state():
+    def sync_get_state() -> Dict[str, Any]:
         """Sync function to get state - runs in thread pool."""
         topics = [
             f"{ROOT_TOPIC}/{SERIAL_NUMBER}/status/current",
@@ -37,7 +37,7 @@ async def async_get_state(
         result = {"state": None, "environmental": None}
         got_response = threading.Event()
 
-        def state_callback(client_, userdata, msg):
+        def state_callback(client_: Any, userdata: Any, msg: Any) -> None:
             try:
                 data = json.loads(msg.payload.decode(errors="replace"))
                 msg_type = data.get("msg")
@@ -74,7 +74,7 @@ async def async_get_state(
 
             client._subscribed_topics = topics
             client._user_callback = state_callback
-            client._client.on_message = state_callback
+            client._client.on_message = state_callback  # type: ignore
 
             client.connect()
 
@@ -117,7 +117,7 @@ async def async_send_command(command: str) -> bool:
     Async function to send a command using existing sync client.
     """
 
-    def sync_send_command():
+    def sync_send_command() -> bool:
         """Sync function to send command - runs in thread pool."""
         try:
             client = DysonMQTTClient(client_id="d2mqtt-async-cmd")
@@ -136,7 +136,7 @@ async def async_send_command(command: str) -> bool:
 async def async_set_power(on: bool) -> bool:
     """Async function to set power state."""
 
-    def sync_set_power():
+    def sync_set_power() -> bool:
         try:
             client = DysonMQTTClient(client_id="d2mqtt-async-cmd")
             client.connect()
@@ -153,7 +153,7 @@ async def async_set_power(on: bool) -> bool:
 async def async_set_fan_speed(speed: int) -> bool:
     """Async function to set fan speed."""
 
-    def sync_set_fan_speed():
+    def sync_set_fan_speed() -> bool:
         try:
             if speed == 0:
                 # Power off

@@ -19,6 +19,7 @@ def parse_sleep_time(value: Union[str, int]) -> int:
     Returns minutes as int.
     Raises ValueError for invalid input.
     """
+    minutes: int
     if isinstance(value, int):
         minutes = value
     elif isinstance(value, str):
@@ -58,6 +59,8 @@ def parse_sleep_time(value: Union[str, int]) -> int:
             raise ValueError(f"Invalid time format: {value}")
     else:
         raise ValueError(f"Invalid type for sleep timer: {type(value)}")
+
+    # Validate range
     if not (0 <= minutes <= 540):
         raise ValueError("Sleep timer must be between 0 and 540 minutes (0 = off).")
     return minutes
