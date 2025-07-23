@@ -137,10 +137,10 @@ pytest --pdb tests/
 def test_mqtt_operation(self, mock_client_class):
     mock_client = Mock()
     mock_client_class.return_value = mock_client
-    
+
     # Test your code here
     result = some_function()
-    
+
     # Verify mocks were called correctly
     mock_client.connect.assert_called_once()
 ```
@@ -159,7 +159,7 @@ def test_cli_command(self):
     result = subprocess.run([
         sys.executable, '-m', 'dyson2mqtt', 'power', 'on'
     ], capture_output=True, text=True)
-    
+
     assert result.returncode == 0
     assert '✓' in result.stdout
 ```
@@ -212,4 +212,4 @@ When adding new tests:
 - [pytest Documentation](https://docs.pytest.org/)
 - [pytest-mock Documentation](https://pytest-mock.readthedocs.io/)
 - [pytest-cov Documentation](https://pytest-cov.readthedocs.io/)
-- [Python unittest.mock](https://docs.python.org/3/library/unittest.mock.html) 
+- [Python unittest.mock](https://docs.python.org/3/library/unittest.mock.html)

@@ -8,12 +8,12 @@ A modular, professional-quality command-line app for controlling Dyson fans over
 
 ## Features
 
-✅ **Device Control**: Power, auto mode, night mode, fan speed, sleep timer  
-✅ **State Monitoring**: Real-time listening, on-demand state fetching  
-✅ **Async Support**: Non-blocking operations with async/await  
-✅ **JSON Output**: Machine-readable responses for automation  
-✅ **Background Listeners**: Thread-safe state monitoring  
-✅ **Clean CLI**: Professional command-line interface with helpful output  
+✅ **Device Control**: Power, auto mode, night mode, fan speed, sleep timer
+✅ **State Monitoring**: Real-time listening, on-demand state fetching
+✅ **Async Support**: Non-blocking operations with async/await
+✅ **JSON Output**: Machine-readable responses for automation
+✅ **Background Listeners**: Thread-safe state monitoring
+✅ **Clean CLI**: Professional command-line interface with helpful output
 
 ---
 
@@ -136,7 +136,7 @@ import json
 import subprocess
 
 # Get device state
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'], 
+result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 

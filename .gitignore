@@ -137,7 +137,7 @@ $RECYCLE.BIN/
 .env.*.local
 
 # Legacy files with hardcoded credentials (security risk)
-legacy/ 
+legacy/
 # Dyson device cache files (contain sensitive credentials)
 .dyson_device_cache.json
 *.dyson*

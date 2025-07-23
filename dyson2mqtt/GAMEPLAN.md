@@ -126,7 +126,7 @@
     - [ ] Oscillation control (if device supports)
     - [ ] Temperature control (for heating models)
     - [ ] Filter status and replacement alerts
-    
+
 - [ ] **Advanced Features**
     - [ ] Scheduling system for automated control
     - [ ] Integration with home automation systems
@@ -149,4 +149,4 @@
 - **Professional CLI** with comprehensive help and error handling
 - **Modular architecture** makes extending the system straightforward
 
-The app is production-ready for controlling Dyson devices via MQTT with both interactive and programmatic interfaces. 
+The app is production-ready for controlling Dyson devices via MQTT with both interactive and programmatic interfaces.

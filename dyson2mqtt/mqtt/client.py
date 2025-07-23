@@ -13,12 +13,7 @@ from typing import Any, Callable, Optional, Union
 
 import paho.mqtt.client as mqtt
 
-from dyson2mqtt.config import (
-    DEVICE_IP,
-    MQTT_PASSWORD,
-    MQTT_PORT,
-    SERIAL_NUMBER,
-)
+from dyson2mqtt.config import DEVICE_IP, MQTT_PASSWORD, MQTT_PORT, SERIAL_NUMBER
 
 logger = logging.getLogger(__name__)
 

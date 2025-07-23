@@ -16,9 +16,13 @@ def run_command(cmd, description):
     try:
         # Add user bin directory to PATH for ARM64 tools
         env = os.environ.copy()
-        env['PATH'] = f"{os.path.expanduser('~/Library/Python/3.9/bin')}:{env.get('PATH', '')}"
+        env["PATH"] = (
+            f"{os.path.expanduser('~/Library/Python/3.9/bin')}:{env.get('PATH', '')}"
+        )
 
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, env=env
+        )
         if result.returncode == 0:
             print(f"✓ {description} completed successfully")
             if result.stdout.strip():
@@ -43,8 +47,14 @@ def main():
 
     # List of commands to run - use direct tool calls instead of python3 -m
     commands = [
-        ("find . -name '*.py' -exec sed -i '' 's/[[:space:]]*$//' {} \\;", "Remove trailing whitespace"),
-        ("find . -name '*.py' -exec sed -i '' '$a\\' {} \\;", "Ensure files end with newline"),
+        (
+            "find . -name '*.py' -exec sed -i '' 's/[[:space:]]*$//' {} \\;",
+            "Remove trailing whitespace",
+        ),
+        (
+            "find . -name '*.py' -exec sed -i '' '$a\\' {} \\;",
+            "Ensure files end with newline",
+        ),
         ("black dyson2mqtt/ tests/ --line-length=88", "Format code with Black"),
         ("isort dyson2mqtt/ tests/ --profile=black", "Sort imports with isort"),
     ]
@@ -64,4 +74,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

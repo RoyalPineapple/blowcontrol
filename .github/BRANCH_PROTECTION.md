@@ -105,4 +105,4 @@ If you encounter issues with branch protection:
 
 ---
 
-**Note**: These settings ensure code quality and prevent accidental merges of broken code. They are essential for maintaining a stable and reliable codebase. 
+**Note**: These settings ensure code quality and prevent accidental merges of broken code. They are essential for maintaining a stable and reliable codebase.

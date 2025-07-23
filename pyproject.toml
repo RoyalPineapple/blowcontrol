@@ -138,4 +138,4 @@ exclude_dirs = ["tests"]
 skips = ["B101", "B601"]
 
 [tool.safety]
-output = "json" 
+output = "json"
