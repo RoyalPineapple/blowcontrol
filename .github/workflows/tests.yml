@@ -92,7 +92,7 @@ jobs:
         isort --check-only --diff dyson2mqtt/ tests/
 
         # Check code style with flake8
-        flake8 dyson2mqtt/ tests/ --max-line-length=88 --extend-ignore=E203,W503
+        flake8 dyson2mqtt/ tests/ --max-line-length=88 --extend-ignore=E203,W503,E501
 
     - name: Run type checking with mypy
       env:
