@@ -2,9 +2,9 @@ name: Tests and Code Quality v2
 
 on:
   push:
-    branches: [ master, main, docs/irreverent-readme ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ master, main, docs/irreverent-readme ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
