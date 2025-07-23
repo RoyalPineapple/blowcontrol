@@ -8,6 +8,41 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
 
 ## 🚀 Quick Start
 
+### Option 1: Install as CLI App (Recommended)
+
+1. **Install the package**:
+   ```bash
+   # Development installation (editable)
+   pip install -e .
+
+   # Or production installation
+   pip install .
+   ```
+
+2. **Configure your device** (create `.env` file):
+   ```bash
+   DEVICE_IP=192.168.3.82
+   MQTT_PORT=1883
+   MQTT_PASSWORD=your-mqtt-password
+   ROOT_TOPIC=438M
+   SERIAL_NUMBER=XXX
+   ```
+
+3. **Control your device**:
+   ```bash
+   # Basic control
+   dyson2mqtt power on
+   dyson2mqtt speed 5
+
+   # Monitor state
+   dyson2mqtt listen
+
+   # Get JSON output for automation
+   dyson2mqtt state --json
+   ```
+
+### Option 2: Run as Python Module
+
 1. **Install dependencies**:
    ```bash
    pip install paho-mqtt python-dotenv
@@ -19,34 +54,33 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
    MQTT_PORT=1883
    MQTT_PASSWORD=your-mqtt-password
    ROOT_TOPIC=438M
-   SERIAL_NUMBER=9HC-EU-UDB6777A
+   SERIAL_NUMBER=XXX
    ```
 
 3. **Control your device**:
    ```bash
    # Basic control
-   python3 -m app power on
-   python3 -m app speed 5
+   python3 -m dyson2mqtt power on
+   python3 -m dyson2mqtt speed 5
 
    # Monitor state
-   python3 -m app listen
+   python3 -m dyson2mqtt listen
 
    # Get JSON output for automation
-   python3 -m app state --json
+   python3 -m dyson2mqtt state --json
    ```
 
 ## ✨ Features
 
-- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer,
-oscillation, direction
+- **🎛️ Device Control**: Power, fan speed, auto mode, night mode, sleep timer, oscillation, direction
 - **📊 State Monitoring**: Real-time listening, on-demand state fetching
 - **🤖 JSON Output**: Machine-readable responses for automation
-
+- **🔧 Professional CLI**: Easy-to-use command-line interface
 
 ## 📖 Documentation
 
-- **[App Documentation](./app/README.md)**: Detailed usage guide, commands, and examples
-- **[Game Plan](./app/GAMEPLAN.md)**: Development roadmap and architecture notes
+- **[App Documentation](./dyson2mqtt/README.md)**: Detailed usage guide, commands, and examples
+- **[Game Plan](./dyson2mqtt/GAMEPLAN.md)**: Development roadmap and architecture notes
 - **[Experimentation](./experimentation/README.md)**: Research and message analysis
 
 ## 🏗️ Project Structure
@@ -66,43 +100,45 @@ dyson2mqtt/
 
 | Command | Category | Syntax | Arguments | Description |
 |---------|----------|--------|-----------|-------------|
-| `power` | **Control** | `python3 -m app power <state>` | `on\|off` | Turn the fan ON or OFF |
-| `auto` | **Control** | `python3 -m app auto <state>` | `on\|off` | Enable/disable auto mode |
-| `night` | **Control** | `python3 -m app night <state>` | `on\|off` | Enable/disable night mode |
-| `speed` | **Control** | `python3 -m app speed <speed>` | `0-10` | Set fan speed (0 turns off) |
-| `timer` | **Control** | `python3 -m app timer <time>` | `0-540`, `2h15m`, `2:15`, `1h`, `45m` | Set sleep timer (0=off) |
-| `listen` | **Monitoring** | `python3 -m app listen` | *(none)* | Real-time monitoring (Ctrl+C to exit) |
-| `state` | **Monitoring** | `python3 -m app state [--json]` | `--json` (optional) | Fetch current state with optional JSON output |
+| `power` | **Control** | `dyson2mqtt power <state>` | `on\|off` | Turn the fan ON or OFF |
+| `auto` | **Control** | `dyson2mqtt auto <state>` | `on\|off` | Enable/disable auto mode |
+| `night` | **Control** | `dyson2mqtt night <state>` | `on\|off` | Enable/disable night mode |
+| `speed` | **Control** | `dyson2mqtt speed <speed>` | `0-10` | Set fan speed (0 turns off) |
+| `timer` | **Control** | `dyson2mqtt timer <time>` | `0-540`, `2h15m`, `2:15`, `1h`, `45m` | Set sleep timer (0=off) |
+| `listen` | **Monitoring** | `dyson2mqtt listen` | *(none)* | Real-time monitoring (Ctrl+C to exit) |
+| `state` | **Monitoring** | `dyson2mqtt state [--json]` | `--json` (optional) | Fetch current state with optional JSON output |
+| `width` | **Oscillation** | `dyson2mqtt width <width>` | `off\|narrow\|medium\|wide\|full` | Set oscillation width |
+| `direction` | **Oscillation** | `dyson2mqtt direction <degrees>` | `0-359` | Set oscillation direction |
+| `stop` | **Oscillation** | `dyson2mqtt stop` | *(none)* | Stop oscillation |
 
 ### Command Categories
 
 - **🎛️ Control Commands**: Direct device control (power, settings, timers)
 - **📊 Monitoring Commands**: State monitoring and real-time updates
+- **🔄 Oscillation Commands**: Control fan oscillation and direction
 
 ### Quick Examples
 
-### Shell Scripting
 ```bash
-# Morning routine
-python3 -m app power on
-python3 -m app auto on
-python3 -m app speed 3
+# Basic control
+dyson2mqtt power on                    # Turn fan on
+dyson2mqtt speed 5                     # Set speed to 5
+dyson2mqtt auto on                     # Enable auto mode
+dyson2mqtt night on                    # Enable night mode
+dyson2mqtt timer 2h15m                 # Set 2h15m sleep timer
 
-# Get current status
-STATUS=$(python3 -m app state --json)
-echo $STATUS | jq '.state.product-state.fpwr'
-```
+# Oscillation control
+dyson2mqtt width wide                  # Set wide oscillation
+dyson2mqtt direction 180               # Point oscillation at 180°
+dyson2mqtt stop                        # Stop oscillation
 
-### Python Integration
-```python
-import json, subprocess
+# Monitoring
+dyson2mqtt listen                      # Real-time status updates
+dyson2mqtt state --json                # Get current state as JSON
 
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
-                       capture_output=True, text=True)
-state = json.loads(result.stdout)
-
-if state['success']:
-    print(f"Power: {state['state']['product-state']['fpwr']}")
+# Automation
+dyson2mqtt power on --json             # JSON output for scripts
+STATUS=$(dyson2mqtt state --json)      # Capture state in variable
 ```
 
 ## 🤖 Automation Examples
@@ -110,12 +146,12 @@ if state['success']:
 ### Shell Scripting
 ```bash
 # Morning routine
-python3 -m app power on
-python3 -m app auto on
-python3 -m app speed 3
+dyson2mqtt power on
+dyson2mqtt auto on
+dyson2mqtt speed 3
 
 # Get current status
-STATUS=$(python3 -m app state --json)
+STATUS=$(dyson2mqtt state --json)
 echo $STATUS | jq '.state.product-state.fpwr'
 ```
 
@@ -123,7 +159,7 @@ echo $STATUS | jq '.state.product-state.fpwr'
 ```python
 import json, subprocess
 
-result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
+result = subprocess.run(['dyson2mqtt', 'state', '--json'],
                        capture_output=True, text=True)
 state = json.loads(result.stdout)
 
@@ -134,8 +170,9 @@ if state['success']:
 ## 🔍 Troubleshooting
 
 - **Connection issues**: Verify `.env` configuration and network connectivity
-- **No response**: Use `python3 -m app listen` to check device communication
+- **No response**: Use `dyson2mqtt listen` to check device communication
 - **JSON parsing**: Ensure you're using `--json` flag for machine-readable output
+- **Command not found**: Make sure you've installed the package with `pip install -e .`
 
 ## 🏛️ Architecture
 
@@ -165,14 +202,14 @@ cd dyson2mqtt
 # Install development dependencies
 pip install -e ".[dev]"
 
+# Install pre-commit hooks
+pre-commit install
+
 # Run tests
 pytest tests/
 
-# Fix linting issues automatically
-python3 scripts/fix_linting.py
-
 # Run code quality checks
-flake8 dyson2mqtt/ tests/
+pre-commit run --all-files
 ```
 
 ### Pre-commit Hooks
@@ -181,11 +218,11 @@ The repository includes pre-commit hooks that automatically check for:
 - Missing newlines at end of files
 - Debug statements
 - Merge conflict markers
+- Code formatting (black)
+- Import sorting (isort)
+- Code style (flake8)
 
-To manually fix formatting issues before committing:
-```bash
-python3 scripts/fix_linting.py
-```
+The hooks run automatically on every commit, ensuring code quality.
 
 ### Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
@@ -209,11 +246,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to control your Dyson device like a pro!** 🌪️
+**Now you're ready to control your Dyson device like a total fool!** 🌪️
 
 ## 📚 Documentation
 
 - **[App Documentation](./dyson2mqtt/README.md)** - Detailed usage, architecture, and examples
-- **[Message Analysis](./dyson2mqtt/commands/dyson_message_analysis.md)** - Complete MQTT message reference
+- **[Message Analysis](./experimentation/dyson_message_analysis.md)** - Complete MQTT message reference
 - **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines and setup
 - **[Changelog](CHANGELOG.md)** - Version history and changes
