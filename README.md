@@ -214,6 +214,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📚 Documentation
 
 - **[App Documentation](./dyson2mqtt/README.md)** - Detailed usage, architecture, and examples
-- **[Message Analysis](./experimentation/dyson_message_analysis.md)** - Complete MQTT message reference
+- **[Message Analysis](./dyson2mqtt/commands/dyson_message_analysis.md)** - Complete MQTT message reference
 - **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines and setup
 - **[Changelog](CHANGELOG.md)** - Version history and changes
