@@ -45,10 +45,10 @@ Based on the Dyson Purifier Cool PC1 manual and captured MQTT messages, this doc
 |-----------|-------------|--------|-------|
 | `oscs` | Oscillation Status | `ON`, `OFF` | Whether oscillating |
 | `oson` | Oscillation On | `ON`, `OFF` | Oscillation enabled |
-| `osal` | Oscillation Angle Lower | `0000`-`0359` | Start angle (degrees) |
-| `osau` | Oscillation Angle Upper | `0000`-`0359` | End angle (degrees) |
+| `osal` | Oscillation Angle Lower | `0005`-`0355` | Start angle (degrees) |
+| `osau` | Oscillation Angle Upper | `0005`-`0355` | End angle (degrees) |
 | `ancp` | Angle Control Point | `0090`, `CUST` | Fixed 90° or custom range |
-| `apos` | Actual Position | `0000`-`0359` | Current fan position (from LOCATION) |
+| `apos` | Actual Position | `0005`-`0355` | Current fan position (from LOCATION) |
 
 ### Display & Interface
 | Parameter | Description | Values | Notes |
