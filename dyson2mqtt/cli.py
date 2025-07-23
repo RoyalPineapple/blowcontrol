@@ -455,7 +455,9 @@ EXIT CODES:
 
                 callback = json_callback if args.json else pretty_callback
 
-                client.subscribe_and_listen(["status/current", "status/fault"], callback)
+                client.subscribe_and_listen(
+                    ["status/current", "status/fault"], callback
+                )
             except KeyboardInterrupt:
                 print("\n👋 Stopping listener...")
                 client.disconnect()

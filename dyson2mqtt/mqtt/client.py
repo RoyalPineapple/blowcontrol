@@ -87,7 +87,9 @@ class DysonMQTTClient:
             self._client.subscribe(topic)
         self._client.on_message = callback  # type: ignore
 
-    def subscribe_and_listen(self, topics: Union[str, list[str]], callback: Optional[Callable] = None) -> None:
+    def subscribe_and_listen(
+        self, topics: Union[str, list[str]], callback: Optional[Callable] = None
+    ) -> None:
         """
         Subscribe to one or more topics and print all received messages until interrupted.
         :param topics: str or list of str

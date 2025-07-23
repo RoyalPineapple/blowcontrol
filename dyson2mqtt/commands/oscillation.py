@@ -357,7 +357,9 @@ def parse_width_input(width_input: Any) -> int:
         raise ValueError(f"Width must be an integer or string, got {type(width_input)}")
 
 
-def set_oscillation_width(width_input: Any, fallback_heading: int = 180) -> dict[str, Any]:
+def set_oscillation_width(
+    width_input: Any, fallback_heading: int = 180
+) -> dict[str, Any]:
     """
     Set oscillation width centered on current fan position (Dyson app style).
 
