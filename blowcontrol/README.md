@@ -58,22 +58,26 @@ Run the CLI using:
 python3 -m app <command> [arguments]
 ```
 
-## 🔧 Commands Reference
+## 🔧 Basic Usage
 
-| Command | Category | Syntax | Arguments | Description |
-|---------|----------|--------|-----------|-------------|
-| `power` | **Control** | `python3 -m app power <state>` | `on\|off` | Turn the fan ON or OFF |
-| `auto` | **Control** | `python3 -m app auto <state>` | `on\|off` | Enable/disable auto mode |
-| `night` | **Control** | `python3 -m app night <state>` | `on\|off` | Enable/disable night mode |
-| `speed` | **Control** | `python3 -m app speed <speed>` | `0-10` | Set fan speed (0 turns off) |
-| `timer` | **Control** | `python3 -m app timer <time>` | `0-540`, `2h15m`, `2:15`, `1h`, `45m` | Set sleep timer (0=off) |
-| `listen` | **Monitoring** | `python3 -m app listen` | *(none)* | Real-time monitoring (Ctrl+C to exit) |
-| `state` | **Monitoring** | `python3 -m app state [--json]` | `--json` (optional) | Fetch current state with optional JSON output |
+```bash
+# Power control
+python3 -m app power on|off
 
-### Command Categories
+# Fan settings
+python3 -m app speed 0-10
+python3 -m app auto on|off
+python3 -m app night on|off
+python3 -m app timer 2h15m|off
 
-- **🎛️ Control Commands**: Direct device control (power, settings, timers)
-- **📊 Monitoring Commands**: State monitoring and real-time updates
+# Oscillation
+python3 -m app width off|narrow|medium|wide|full
+python3 -m app direction 0-359
+
+# Monitoring
+python3 -m app listen
+python3 -m app state [--json]
+```
 
 **JSON Output Example:**
 ```json
@@ -105,12 +109,11 @@ python3 -m app <command> [arguments]
 ## Automation & Scripting
 
 ### Shell Scripting
-Chain commands in shell scripts:
 ```sh
 #!/bin/bash
 # Morning routine
 python3 -m app power on
-python3 -m app fan-speed 3
+python3 -m app speed 3
 python3 -m app auto on
 
 # Check status
@@ -118,16 +121,12 @@ python3 -m app state --json | jq '.state.product-state.fpwr'
 ```
 
 ### JSON Processing
-Use `jq` or other tools to process JSON output:
 ```sh
 # Get current fan speed
 SPEED=$(python3 -m app state --json | jq -r '.state.product-state.fnsp')
 
 # Check if auto mode is enabled
 AUTO=$(python3 -m app state --json | jq -r '.state.product-state.auto')
-
-# Get air quality readings
-PM25=$(python3 -m app state --json | jq -r '.environmental.data.pm25')
 ```
 
 ### Python Integration

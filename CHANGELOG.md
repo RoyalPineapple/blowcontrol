@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI interface for Dyson fan control
 - MQTT client for device communication
 - Support for power, speed, auto mode, night mode, and sleep timer
-- Oscillation control (width, direction, stop)
+- Oscillation control (width, direction)
 - Real-time state monitoring
 - JSON output for automation
 - Async operations support

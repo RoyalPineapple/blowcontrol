@@ -66,20 +66,26 @@ Copy the credentials into your `.env` file. Don’t lose them.
 
 ---
 
-## 📖 Command Reference
+## 📖 Basic Usage
 
-| Command      | Category      | Syntax                                 | Arguments                | Description                        |
-|--------------|--------------|----------------------------------------|--------------------------|------------------------------------|
-| `power`      | Control       | `blowcontrol power <state>`            | `on|off`                 | Turn the fan ON or OFF             |
-| `auto`       | Control       | `blowcontrol auto <state>`             | `on|off`                 | Enable/disable auto mode           |
-| `night`      | Control       | `blowcontrol night <state>`            | `on|off`                 | Enable/disable night mode          |
-| `speed`      | Control       | `blowcontrol speed <speed>`            | `0-10`                   | Set fan speed (0 turns off)        |
-| `timer`      | Control       | `blowcontrol timer <time>`             | `0-540`, `2h15m`, etc.   | Set sleep timer (0=off)            |
-| `listen`     | Monitoring    | `blowcontrol listen`                   | *(none)*                 | Real-time monitoring               |
-| `state`      | Monitoring    | `blowcontrol state [--json]`           | `--json` (optional)      | Fetch current state                |
-| `width`      | Oscillation   | `blowcontrol width <width>`            | `off|narrow|medium|wide|full` | Set oscillation width        |
-| `direction`  | Oscillation   | `blowcontrol direction <degrees>`      | `0-359`                  | Set oscillation direction          |
-| `stop`       | Oscillation   | `blowcontrol stop`                     | *(none)*                 | Stop oscillation                   |
+```bash
+# Power control
+blowcontrol power on|off
+
+# Fan settings
+blowcontrol speed 0-10
+blowcontrol auto on|off
+blowcontrol night on|off
+blowcontrol timer 2h15m|off
+
+# Oscillation
+blowcontrol width off|narrow|medium|wide|full
+blowcontrol direction 0-359
+
+# Monitoring
+blowcontrol listen
+blowcontrol state [--json]
+```
 
 > **All commands support `--json` for machine-readable output.**
 
@@ -88,24 +94,16 @@ Copy the credentials into your `.env` file. Don’t lose them.
 ## ⚡ Quick Examples
 
 ```bash
-# Basic control
+# Turn on and set up
 blowcontrol power on
 blowcontrol speed 5
-blowcontrol auto on
-blowcontrol night on
-blowcontrol timer 2h15m
-
-# Oscillation
 blowcontrol width wide
-blowcontrol direction 180
-blowcontrol stop
 
-# Monitoring
-blowcontrol listen
+# Monitor status
 blowcontrol state --json
+blowcontrol listen
 
 # Automation
-blowcontrol power on --json
 STATUS=$(blowcontrol state --json)
 ```
 
