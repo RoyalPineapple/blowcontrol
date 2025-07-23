@@ -469,20 +469,11 @@ EXIT CODES:
             try:
                 import asyncio
 
+                from dyson2mqtt.mqtt.async_client import async_get_state
+
                 async def run_async_get_state():
                     """Async function to get device state."""
-                    try:
-                        client = DysonMQTTClient(client_id="d2mqtt-getstate")
-                        state = await client.get_current_state()
-                        if state:
-                            if args.json:
-                                print(json.dumps(state, indent=2))
-                            else:
-                                DeviceStatePrinter.print_current_state(state)
-                        else:
-                            print("Failed to get device state")
-                    except Exception as e:
-                        print(f"Error getting state: {e}")
+                    return await async_get_state()
 
                 state = asyncio.run(run_async_get_state())
                 if args.json:
