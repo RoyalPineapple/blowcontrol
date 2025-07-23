@@ -21,7 +21,7 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
 
 2. **Configure your device** (create `.env` file):
    ```bash
-   DEVICE_IP=192.168.3.82
+   DEVICE_IP=192.168.1.100
    MQTT_PORT=1883
    MQTT_PASSWORD=your-mqtt-password
    ROOT_TOPIC=XXX
@@ -50,7 +50,7 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
 
 2. **Configure your device** (create `.env` file):
    ```bash
-   DEVICE_IP=192.168.3.82
+   DEVICE_IP=192.168.1.100
    MQTT_PORT=1883
    MQTT_PASSWORD=your-mqtt-password
    ROOT_TOPIC=XXX
@@ -105,7 +105,7 @@ This project relies on **OpenDyson** to extract the necessary MQTT credentials f
 
 4. **Use the credentials in your `.env` file**:
    ```bash
-   DEVICE_IP=192.168.3.82
+   DEVICE_IP=192.168.1.100
    MQTT_PORT=1883
    MQTT_PASSWORD=[password-from-opendyson]
    ROOT_TOPIC=[topic-root-from-opendyson]
