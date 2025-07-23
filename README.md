@@ -1,149 +1,199 @@
-![BlowControl_header](https://github.com/user-attachments/assets/896eb720-cef3-4280-a1e2-e0b479af587c)
-
-# BlowControl
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/RoyalPineapple/blowcontrol/workflows/Tests%20and%20Code%20Quality/badge.svg)](https://github.com/RoyalPineapple/blowcontrol/actions)
-[![Codecov](https://codecov.io/gh/RoyalPineapple/blowcontrol/branch/master/graph/badge.svg)](https://codecov.io/gh/RoyalPineapple/blowcontrol)
 
 **BlowControl** is a command-line app for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it works. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
 
 ---
 
-## 🚀 Quick Start
+## Features
 
-1. **Install**
-   ```bash
-   pip install -e .   # Dev mode
-   # or
-   pip install .      # Standard
-   ```
-
-2. **Configure** (create a `.env` file):
-   ```ini
-   DEVICE_IP=192.168.1.100
-   MQTT_PORT=1883
-   MQTT_PASSWORD=your-mqtt-password
-   ROOT_TOPIC=XXX
-   SERIAL_NUMBER=XXX-XX-XXXXXXXX
-   ```
-
-3. **Control your device**:
-   ```bash
-   blowcontrol power on
-   blowcontrol speed 5
-   blowcontrol listen
-   blowcontrol state --json
-   ```
-   > **Note:** All commands support the `--json` flag for machine-readable output. Scripting is expected.
+✅ **Device Control**: Power, auto mode, night mode, fan speed, sleep timer
+✅ **State Monitoring**: Real-time listening, on-demand state fetching
+✅ **Async Support**: Non-blocking operations with async/await
+✅ **JSON Output**: Machine-readable responses for automation
+✅ **Background Listeners**: Thread-safe state monitoring
+✅ **Clean CLI**: Professional command-line interface with helpful output
 
 ---
 
-## 🔑 Getting Device Credentials
+## Configuration
 
-You’ll need MQTT credentials from your Dyson device. Dyson doesn’t make this easy. Use [OpenDyson](https://github.com/libdyson-wg/opendyson):
+This app uses environment variables for configuration. The easiest way to set these is with a `.env` file in your project root:
 
-```bash
-# Install OpenDyson (requires Go)
- go install github.com/libdyson-wg/opendyson
-
-# Log in and extract credentials
- opendyson login
- opendyson devices
+```
+# BlowControl .env configuration example
+DEVICE_IP=192.168.3.82
+MQTT_PORT=1883
+MQTT_PASSWORD=your-mqtt-password
+ROOT_TOPIC=438M
+SERIAL_NUMBER=9HC-EU-UDB6777A
 ```
 
-Copy the credentials into your `.env` file. Don’t lose them.
+- `DEVICE_IP`: Dyson device IP address (required)
+- `MQTT_PORT`: MQTT port (default: 1883)
+- `MQTT_PASSWORD`: MQTT password (from OpenDyson)
+- `ROOT_TOPIC`: MQTT root topic (from OpenDyson, often a short code)
+- `SERIAL_NUMBER`: Dyson device serial number (from OpenDyson, also used as MQTT username)
+
+The app will automatically load these from `.env` if present.
 
 ---
 
-## ✨ Features
+## Installation
 
-- Control your Dyson fan: power, speed, auto mode, night mode, sleep timer, oscillation, direction
-- State monitoring: real-time and on-demand
-- Universal `--json` output for all commands
-- Async/await support for non-blocking operations
-- CLI with argparse and proper exit codes
-
----
-
-## 📖 Command Reference
-
-| Command      | Category      | Syntax                                 | Arguments                | Description                        |
-|--------------|--------------|----------------------------------------|--------------------------|------------------------------------|
-| `power`      | Control       | `blowcontrol power <state>`            | `on|off`                 | Turn the fan ON or OFF             |
-| `auto`       | Control       | `blowcontrol auto <state>`             | `on|off`                 | Enable/disable auto mode           |
-| `night`      | Control       | `blowcontrol night <state>`            | `on|off`                 | Enable/disable night mode          |
-| `speed`      | Control       | `blowcontrol speed <speed>`            | `0-10`                   | Set fan speed (0 turns off)        |
-| `timer`      | Control       | `blowcontrol timer <time>`             | `0-540`, `2h15m`, etc.   | Set sleep timer (0=off)            |
-| `listen`     | Monitoring    | `blowcontrol listen`                   | *(none)*                 | Real-time monitoring               |
-| `state`      | Monitoring    | `blowcontrol state [--json]`           | `--json` (optional)      | Fetch current state                |
-| `width`      | Oscillation   | `blowcontrol width <width>`            | `off|narrow|medium|wide|full` | Set oscillation width        |
-| `direction`  | Oscillation   | `blowcontrol direction <degrees>`      | `0-359`                  | Set oscillation direction          |
-| `stop`       | Oscillation   | `blowcontrol stop`                     | *(none)*                 | Stop oscillation                   |
-
-> **All commands support `--json` for machine-readable output.**
+- Install Python 3.8+
+- Install dependencies:
+  ```sh
+  pip install paho-mqtt python-dotenv
+  ```
 
 ---
 
-## ⚡ Quick Examples
+## Usage
+
+Run the CLI using:
+
+```
+python3 -m app <command> [arguments]
+```
+
+## 🔧 Basic Usage
 
 ```bash
-# Basic control
-blowcontrol power on
-blowcontrol speed 5
-blowcontrol auto on
-blowcontrol night on
-blowcontrol timer 2h15m
+# Power control
+python3 -m app power on|off
+
+# Fan settings
+python3 -m app speed 0-10
+python3 -m app auto on|off
+python3 -m app night on|off
+python3 -m app timer 2h15m|off
 
 # Oscillation
-blowcontrol width wide
-blowcontrol direction 180
-blowcontrol stop
+python3 -m app width off|narrow|medium|wide|full
+python3 -m app direction 0-359
 
 # Monitoring
-blowcontrol listen
-blowcontrol state --json
+python3 -m app listen
+python3 -m app state [--json]
+```
 
-# Automation
-blowcontrol power on --json
-STATUS=$(blowcontrol state --json)
+**JSON Output Example:**
+```json
+{
+  "success": true,
+  "state": {
+    "msg": "CURRENT-STATE",
+    "time": "2025-07-22T17:44:55.000Z",
+    "product-state": {
+      "fpwr": "ON",
+      "fnsp": "0005",
+      "auto": "OFF",
+      "nmod": "OFF",
+      "oson": "OFF"
+    }
+  },
+  "environmental": {
+    "msg": "ENVIRONMENTAL-CURRENT-SENSOR-DATA",
+    "data": {
+      "pm25": "0106",
+      "pm10": "0093"
+    }
+  }
+}
+```
+
+---
+
+## Automation & Scripting
+
+### Shell Scripting
+```sh
+#!/bin/bash
+# Morning routine
+python3 -m app power on
+python3 -m app speed 3
+python3 -m app auto on
+
+# Check status
+python3 -m app state --json | jq '.state.product-state.fpwr'
+```
+
+### JSON Processing
+```sh
+# Get current fan speed
+SPEED=$(python3 -m app state --json | jq -r '.state.product-state.fnsp')
+
+# Check if auto mode is enabled
+AUTO=$(python3 -m app state --json | jq -r '.state.product-state.auto')
 ```
 
 ### Python Integration
 ```python
-import json, subprocess
-result = subprocess.run(['blowcontrol', 'state', '--json'], capture_output=True, text=True)
+import json
+import subprocess
+
+# Get device state
+result = subprocess.run(['python3', '-m', 'app', 'state', '--json'],
+                       capture_output=True, text=True)
 state = json.loads(result.stdout)
+
 if state['success']:
-    print(f"Power: {state['state']['product-state']['fpwr']}")
+    power = state['state']['product-state']['fpwr']
+    fan_speed = state['state']['product-state']['fnsp']
+    print(f"Power: {power}, Speed: {fan_speed}")
 ```
 
 ---
 
-## 🛠️ Troubleshooting
-- **Connection issues**: Check `.env` and your network.
-- **No response**: Use `blowcontrol listen` to see if your fan is even listening.
-- **JSON parsing**: Use `--json` and pipe to `jq` or similar. If it’s weird, it’s probably the fan.
-- **Command not found**: Did you install it? Try `pip install -e .`.
+## Architecture
+
+The app is designed with a modular architecture:
+
+- **`app/commands/`**: Individual command implementations
+- **`app/mqtt/`**: MQTT client and async wrapper
+- **`app/state/`**: Device state management and printing
+- **`app/cli.py`**: Command-line interface
+- **`app/config.py`**: Configuration management
+
+### Key Components
+
+- **`DysonMQTTClient`**: Synchronous MQTT operations
+- **`async_get_state()`**: Asynchronous state fetching
+- **`DeviceStatePrinter`**: Formatted output for human consumption
 
 ---
 
-## 🏗️ Development & Contributing
-- See [CONTRIBUTING.md](CONTRIBUTING.md) for code style, PR process, and dev setup
-- See [tests/README.md](tests/README.md) for test suite usage and patterns
-- Run tests: `pytest tests/`
-- Run code quality checks: `pre-commit run --all-files`
+## Extending
+
+### Adding New Commands
+1. Create a new module in `app/commands/`
+2. Implement your command function
+3. Add CLI integration in `app/cli.py`
+4. Add tests in the same directory
+
+### Custom State Processing
+- Extend `DeviceStatePrinter` for custom output formats
+- Use the JSON output mode for programmatic processing
 
 ---
 
-## 📄 License
-MIT License. See [LICENSE](LICENSE).
+## Troubleshooting
+
+### Connection Issues
+- Ensure your `.env` file has correct values
+- Verify the device is on your network and accessible
+- Check that MQTT credentials from OpenDyson are correct
+
+### Command Not Responding
+- Use `python3 -m app listen` to see if device is sending messages
+- Check logs for connection errors
+
+### JSON Parsing
+- Ensure you're using `--json` flag for machine-readable output
+- Pipe output through `jq` to validate JSON structure
+- Check the `success` field in JSON responses for error handling
 
 ---
 
-**Now you can control your Dyson device from the terminal. Don’t blame me if it blows up.**
+## License
 
-## 📚 More Documentation
-- [App Documentation](./blowcontrol/README.md) - Internal usage, architecture, and extending
-- [Message Analysis](./blowcontrol/commands/dyson_message_analysis.md) - MQTT message reference
-- [Changelog](CHANGELOG.md) - Version history and changes
+This project is licensed under the Seems to Work License - see the [LICENSE](../LICENSE) file for details.

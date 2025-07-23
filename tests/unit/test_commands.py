@@ -15,8 +15,6 @@ from blowcontrol.commands.oscillation import (
     set_oscillation_angles,
     set_oscillation_direction,
     set_oscillation_width,
-    stop_oscillation,
-    stop_oscillation_dict,
 )
 from blowcontrol.commands.power import request_current_state, set_power
 from blowcontrol.commands.sleep_timer import parse_sleep_time, set_sleep_timer
@@ -581,34 +579,6 @@ class TestOscillationCommands:
 
         assert result["success"] is False
         assert "error" in result
-
-    @patch("paho.mqtt.client.Client")
-    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
-    def test_stop_oscillation(self, mock_client_class, mock_paho_client, mock_env_vars):
-        """Test stopping oscillation."""
-        mock_client = Mock()
-        mock_client.send_standalone_command.return_value = True
-        mock_client_class.return_value = mock_client
-
-        result = stop_oscillation()
-
-        assert result is True
-        mock_client.send_standalone_command.assert_called_once()
-
-    @patch("paho.mqtt.client.Client")
-    @patch("blowcontrol.commands.oscillation.DysonMQTTClient")
-    def test_stop_oscillation_dict(
-        self, mock_client_class, mock_paho_client, mock_env_vars
-    ):
-        """Test stopping oscillation with dict return."""
-        mock_client = Mock()
-        mock_client.send_standalone_command.return_value = True
-        mock_client_class.return_value = mock_client
-
-        result = stop_oscillation_dict()
-
-        assert result["success"] is True
-        mock_client.send_standalone_command.assert_called_once()
 
     @patch("paho.mqtt.client.Client")
     @patch("blowcontrol.mqtt.async_client.async_get_state")

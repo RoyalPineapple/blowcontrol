@@ -18,7 +18,6 @@ from blowcontrol.commands.oscillation import (
     parse_width_input,
     set_oscillation_direction,
     set_oscillation_width,
-    stop_oscillation_dict,
 )
 from blowcontrol.commands.power import set_power
 from blowcontrol.commands.sleep_timer import set_sleep_timer
@@ -98,7 +97,6 @@ EXAMPLES:
   # Oscillation control
   blowcontrol width wide                  # Set wide oscillation
   blowcontrol direction 180               # Point oscillation at 180°
-  blowcontrol stop                        # Stop oscillation
 
   # Monitoring
   blowcontrol listen                      # Real-time status updates
@@ -264,16 +262,6 @@ EXIT CODES:
     )
     direction_parser.add_argument("direction", help="Direction in degrees: 0-359")
     direction_parser.add_argument(
-        "--json", action="store_true", help="Output result as JSON"
-    )
-
-    # Stop oscillation command
-    stop_parser = subparsers.add_parser(
-        "stop",
-        help="Stop oscillation",
-        description="Stop all oscillation movement. The device will remain stationary.",
-    )
-    stop_parser.add_argument(
         "--json", action="store_true", help="Output result as JSON"
     )
 
@@ -572,31 +560,7 @@ EXIT CODES:
                     json_mode=args.json,
                 )
                 sys.exit(1)
-        elif args.command == "stop":
-            try:
-                result = stop_oscillation_dict()
-                if result["success"]:
-                    output_result(
-                        True,
-                        "Oscillation stopped",
-                        result,
-                        json_mode=args.json,
-                    )
-                else:
-                    output_result(
-                        False,
-                        f"Failed to stop oscillation: {result.get('error', 'Unknown error')}",
-                        result,
-                        json_mode=args.json,
-                    )
-                    sys.exit(1)
-            except Exception as e:
-                output_result(
-                    False,
-                    f"Failed to stop oscillation: {e}",
-                    json_mode=args.json,
-                )
-                sys.exit(1)
+
         else:
             print(f"Error: Unknown command '{args.command}'")
             sys.exit(1)

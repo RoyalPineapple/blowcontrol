@@ -262,26 +262,6 @@ def set_oscillation_angles(
         }
 
 
-def stop_oscillation() -> bool:
-    """Stop oscillation (keep current position)."""
-    command_data = {
-        "oscs": "OFF",  # Disable oscillation
-        "oson": "OFF",  # Turn off oscillation
-    }
-
-    try:
-        client = DysonMQTTClient(client_id="d2mqtt-osc-stop")
-        success = client.send_standalone_command("STATE-SET", command_data)
-        if success:
-            logger.info("✅ Oscillation stopped")
-        else:
-            logger.error("❌ Failed to stop oscillation")
-        return success
-    except Exception as e:
-        logger.error(f"❌ Error stopping oscillation: {e}")
-        return False
-
-
 def get_oscillation_info(osal: str, osau: str) -> dict[str, Any]:
     """
     Convert raw oscillation angles back to width/heading format.
@@ -420,11 +400,47 @@ def set_oscillation_width(
     # Handle special case: width 0 means turn off oscillation
     if width == 0:
         logger.info("Width 'off' requested - turning off oscillation")
-        result = stop_oscillation_dict()
-        result["width_adjusted"] = original_width != width
-        result["requested_width"] = original_width_input
-        result["adjusted_width"] = "off" if width == 0 else width
-        return result
+        command_data = {
+            "oscs": "OFF",  # Disable oscillation
+            "oson": "OFF",  # Turn off oscillation
+        }
+
+        try:
+            client = DysonMQTTClient(client_id="d2mqtt-osc-stop")
+            success = client.send_standalone_command("STATE-SET", command_data)
+            if success:
+                logger.info("✅ Oscillation stopped")
+            else:
+                logger.error("❌ Failed to stop oscillation")
+
+            result = {
+                "success": success,
+                "actual_width": 0,
+                "actual_heading": None,
+                "lower_angle": None,
+                "upper_angle": None,
+                "adjusted": False,
+                "original_heading": None,
+                "width_adjusted": original_width != width,
+                "requested_width": original_width_input,
+                "adjusted_width": "off",
+            }
+            return result
+        except Exception as e:
+            logger.error(f"❌ Error stopping oscillation: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "actual_width": None,
+                "actual_heading": None,
+                "lower_angle": None,
+                "upper_angle": None,
+                "adjusted": False,
+                "original_heading": None,
+                "width_adjusted": original_width != width,
+                "requested_width": original_width_input,
+                "adjusted_width": "off",
+            }
 
     # Try to get current fan position from device state
     current_heading = None
@@ -517,23 +533,6 @@ def set_oscillation_width(
         result["adjusted_width"] = WIDTH_DISPLAY_NAMES.get(width, width)
 
     return result
-
-
-def stop_oscillation_dict() -> dict[str, Any]:
-    """Stop oscillation and return dict format like set_oscillation_angles."""
-    success = stop_oscillation()
-    return {
-        "success": success,
-        "actual_width": 0,
-        "actual_heading": None,
-        "lower_angle": None,
-        "upper_angle": None,
-        "adjusted": False,
-        "original_heading": None,
-        "width_adjusted": False,
-        "requested_width": 0,
-        "adjusted_width": 0,
-    }
 
 
 def set_oscillation_direction(heading: Union[int, str]) -> dict[str, Any]:

@@ -217,15 +217,3 @@ class TestCLIOscillation:
                 output = mock_stdout.getvalue()
                 assert "✓" in output
                 mock_set_direction.assert_called_once_with(90)
-
-    @patch("blowcontrol.cli.stop_oscillation_dict")
-    def test_cli_oscillation_stop(self, mock_stop):
-        """Test CLI oscillation stop command."""
-        mock_stop.return_value = {"success": True}
-
-        with patch("sys.argv", ["blowcontrol", "stop"]):
-            with patch("sys.stdout", StringIO()) as mock_stdout:
-                main()
-                output = mock_stdout.getvalue()
-                assert "✓" in output
-                mock_stop.assert_called_once()

@@ -19,7 +19,6 @@ from .oscillation import (
     set_oscillation_angles,
     set_oscillation_direction,
     set_oscillation_width,
-    stop_oscillation,
 )
 from .power import request_current_state, set_power
 from .sleep_timer import set_sleep_timer
@@ -32,7 +31,6 @@ __all__ = [
     "set_fan_speed",
     "set_sleep_timer",
     "set_oscillation_angles",
-    "stop_oscillation",
     "set_oscillation_width",
     "set_oscillation_direction",
 ]
