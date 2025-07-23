@@ -25,7 +25,7 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
    MQTT_PORT=1883
    MQTT_PASSWORD=your-mqtt-password
    ROOT_TOPIC=438M
-   SERIAL_NUMBER=XXX
+   SERIAL_NUMBER=XXX-XX-XXXXXXXX
    ```
 
 3. **Control your device**:
@@ -54,7 +54,7 @@ A simple application for controlling Dyson fans via MQTT with support for real-t
    MQTT_PORT=1883
    MQTT_PASSWORD=your-mqtt-password
    ROOT_TOPIC=438M
-   SERIAL_NUMBER=XXX
+   SERIAL_NUMBER=XXX-XX-XXXXXXXX
    ```
 
 3. **Control your device**:
