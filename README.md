@@ -1,5 +1,5 @@
 
-**BlowControl** is a command-line tool for controlling Dyson fans over MQTT. It is built hastily and without an excess of care, but it seems to work. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
+**BlowControl** is a command-line tool for controlling Dyson fans over MQTT. It is built hastily and without an excess of care but it seems to work. You get device control, state monitoring, async operations, and machine-readable JSON output for automation. If you need a rock solid, enterprise-grade solution, keep looking. If your goal is to change the fan settings without ever moving your cursor from the active terminal window, this is your stop.
 
 ---
 
