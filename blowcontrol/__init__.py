@@ -12,7 +12,7 @@ Example:
     python3 -m app async-get-state --json
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Alex Odawa"
 __license__ = "MIT"
 __url__ = "https://github.com/yourusername/blowcontrol"
