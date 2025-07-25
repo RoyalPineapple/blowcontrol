@@ -21,10 +21,10 @@ if [[ -n $(git status --porcelain) ]]; then
   exit 1
 fi
 
-# Check if on main branch
+# Check if on master branch
 current_branch=$(git rev-parse --abbrev-ref HEAD)
-if [[ "$current_branch" != "main" ]]; then
-  echo "❌ You must be on the main branch to publish."
+if [[ "$current_branch" != "master" ]]; then
+  echo "❌ You must be on the master branch to publish."
   exit 1
 fi
 
